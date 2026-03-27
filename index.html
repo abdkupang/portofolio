@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Portfolio Abdillah Mukhair Ismail - Web Developer & Designer kreatif dari Makassar yang berfokus pada pengembangan aplikasi web modern dan inovatif.">
+    <title>Portfolio | Abdillah Mukhair Ismail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Particle Canvas Background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Animated Grid Overlay -->
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <span class="logo-bracket">&lt;</span>DEV<span class="logo-bracket">/&gt;</span>
+            </a>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#hero" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Available for Freelance
+            </div>
+            <h1 class="hero-title">
+                <span class="hero-greeting">Hello, I'm</span>
+                <span class="hero-name glitch" data-text="Abdillah Mukhair Ismail">Abdillah Mukhair Ismail</span>
+            </h1>
+            <p class="hero-subtitle">
+                <span class="typing-text" id="typing-text"></span>
+                <span class="cursor">|</span>
+            </p>
+            <p class="hero-description">
+                Merancang pengalaman digital yang inovatif & futuristik.
+                Mengubah ide menjadi kenyataan melalui kode yang elegan.
+            </p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn btn-primary">
+                    <span>Lihat Karya</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="#contact" class="btn btn-outline">
+                    <span>Hubungi Saya</span>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">3+</span>
+                    <span class="stat-label">Tahun Pengalaman</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">15+</span>
+                    <span class="stat-label">Proyek Selesai</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Klien Puas</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-orbit">
+                <div class="orbit-ring ring-1"></div>
+                <div class="orbit-ring ring-2"></div>
+                <div class="orbit-ring ring-3"></div>
+                <div class="orbit-dot dot-1"></div>
+                <div class="orbit-dot dot-2"></div>
+                <div class="orbit-dot dot-3"></div>
+                <div class="orbit-center">
+                    <div class="hologram-icon">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M16 18l6-6-6-6" />
+                            <path d="M8 6l-6 6 6 6" />
+                            <path d="M14.5 4l-5 16" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>Scroll Down</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">&lt;about&gt;</span>
+                <h2 class="section-title">Tentang <span class="accent">Saya</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="about-grid">
+                <div class="about-image reveal reveal-left">
+                    <div class="image-frame">
+                        <img src="foto.jpg" alt="Abdillah Mukhair Ismail" class="profile-photo"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                        <div class="frame-corner top-left"></div>
+                        <div class="frame-corner top-right"></div>
+                        <div class="frame-corner bottom-left"></div>
+                        <div class="frame-corner bottom-right"></div>
+                    </div>
+                </div>
+                <div class="about-content reveal reveal-right">
+                    <h3 class="about-heading">Full-Stack Web Developer & AI-Powered Coder</h3>
+                    <p class="about-text">
+                        Saya <strong>Abdillah Mukhair Ismail</strong>, kelahiran Kupang, 21 Desember 2004. Saat ini saya
+                        merupakan mahasiswa <strong>Teknik Informatika S1</strong> di <strong>Universitas Dipa
+                            Makassar</strong>.
+                        Saya passionate dalam membangun aplikasi web modern dengan memanfaatkan <strong>AI sebagai alat
+                            utama</strong> dalam proses development — dikenal sebagai <em>Vibes Coding</em>, di mana AI
+                        menjadi
+                        partner dalam menulis kode, debugging, dan merancang arsitektur sistem.
+                    </p>
+                    <p class="about-text">
+                        Pengalaman saya meliputi: menjadi <strong>asisten pengajar web development</strong> di SMK
+                        Negeri 7 Takalar
+                        selama 2 minggu, <strong>magang 1 bulan di Komdigi</strong> di mana saya berhasil membangun
+                        sistem
+                        daftar tamu berbasis <strong>Laravel</strong>, serta menjadi <strong>asisten dosen</strong>
+                        selama 1 semester
+                        untuk 3 mata kuliah di kampus. Sebagai tugas akhir, saya merancang <strong>Sistem Manajemen
+                            Kelas
+                            Sepak Bola</strong> berbasis website untuk FS31 Soccer School menggunakan <strong>algoritma
+                            K-Means</strong>.
+                    </p>
+                    <div class="about-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Nama</span>
+                            <span class="info-value">Abdillah Mukhair Ismail</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">TTL</span>
+                            <span class="info-value">Kupang, 21 Des 2004</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Kampus</span>
+                            <span class="info-value">Universitas Dipa Makassar</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Jurusan</span>
+                            <span class="info-value">Teknik Informatika S1</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">abdkupang46@gmail.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Lokasi</span>
+                            <span class="info-value">Makassar, Indonesia</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Coding Style</span>
+                            <span class="info-value available">AI / Vibes Coding</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status</span>
+                            <span class="info-value available">Available</span>
+                        </div>
+                    </div>
+                    <a href="#contact" class="btn btn-primary">
+                        <span>Download CV</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section skills" id="skills">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">&lt;skills&gt;</span>
+                <h2 class="section-title">Keahlian <span class="accent">Saya</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card reveal" style="--delay: 0.1s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M16 18l6-6-6-6" />
+                            <path d="M8 6l-6 6 6 6" />
+                            <circle cx="12" cy="12" r="2" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">PHP / MySQL</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="95"></div>
+                    </div>
+                    <span class="skill-percent">95%</span>
+                </div>
+                <div class="skill-card reveal" style="--delay: 0.15s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M4 4h16v16H4z" />
+                            <path d="M9 9l3 3-3 3" />
+                            <path d="M13 15h3" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">HTML / CSS</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="95"></div>
+                    </div>
+                    <span class="skill-percent">95%</span>
+                </div>
+                <div class="skill-card reveal" style="--delay: 0.2s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M16 18l6-6-6-6" />
+                            <path d="M8 6l-6 6 6 6" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">JavaScript</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="90"></div>
+                    </div>
+                    <span class="skill-percent">90%</span>
+                </div>
+                <div class="skill-card reveal" style="--delay: 0.25s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path
+                                d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                            <line x1="12" y1="22.08" x2="12" y2="12" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">Laravel</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="80"></div>
+                    </div>
+                    <span class="skill-percent">80%</span>
+                </div>
+                <div class="skill-card reveal" style="--delay: 0.3s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                            <path d="M2 17l10 5 10-5" />
+                            <path d="M2 12l10 5 10-5" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">Node.js</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="80"></div>
+                    </div>
+                    <span class="skill-percent">80%</span>
+                </div>
+                <div class="skill-card reveal" style="--delay: 0.35s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">Next.js</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="75"></div>
+                    </div>
+                    <span class="skill-percent">75%</span>
+                </div>
+                <div class="skill-card reveal" style="--delay: 0.4s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
+                            <path d="M2 12h20" />
+                            <path
+                                d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">WordPress</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="75"></div>
+                    </div>
+                    <span class="skill-percent">75%</span>
+                </div>
+                <div class="skill-card reveal" style="--delay: 0.45s">
+                    <div class="skill-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M4 11a9 9 0 0118 0" />
+                            <path d="M4 11V8" />
+                            <path d="M22 11V8" />
+                            <path d="M12 11v4" />
+                            <line x1="10" y1="15" x2="14" y2="15" />
+                            <path d="M8 18h8" />
+                        </svg>
+                    </div>
+                    <h3 class="skill-name">API Integration</h3>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-progress="85"></div>
+                    </div>
+                    <span class="skill-percent">85%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section projects" id="projects">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">&lt;projects&gt;</span>
+                <h2 class="section-title">Proyek <span class="accent">Terbaru</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="projects-grid">
+                <!-- Project 1: AutoPost -->
+                <div class="project-card reveal" style="--delay: 0.1s">
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                <path d="M8 10l4 4-4 4" />
+                                <line x1="14" y1="14" x2="18" y2="14" />
+                            </svg>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="https://github.com/abdkupang" target="_blank" class="project-link">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">AutoPost</h3>
+                        <p class="project-desc">Platform manajemen sosial media otomatis dengan fitur scheduling,
+                            multi-akun, sistem pembayaran, dan dashboard admin.</p>
+                        <div class="project-tags">
+                            <span class="tag">PHP</span>
+                            <span class="tag">MySQL</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-header">
+                                <span class="project-progress-label">Progress</span>
+                                <span class="project-progress-percent">100%</span>
+                            </div>
+                            <div class="project-progress-bar">
+                                <div class="project-progress-fill" data-progress="100"></div>
+                            </div>
+                            <a href="http://leza-autopost.my.id/" target="_blank" class="project-live-link">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                    <path
+                                        d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                                </svg>
+                                Live: leza-autopost.my.id
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: AI Video Generator -->
+                <div class="project-card reveal" style="--delay: 0.2s">
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1">
+                                <polygon points="23 7 16 12 23 17 23 7" />
+                                <rect x="1" y="5" width="15" height="14" rx="2" />
+                            </svg>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="https://github.com/abdkupang" target="_blank" class="project-link">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">AI Video Generator</h3>
+                        <p class="project-desc">Generator video AI multi-provider dengan dukungan Google Veo 2, Kling
+                            AI, dan Replicate. Dilengkapi manajemen API key.</p>
+                        <div class="project-tags">
+                            <span class="tag">Next.js</span>
+                            <span class="tag">AI API</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-header">
+                                <span class="project-progress-label">Progress</span>
+                                <span class="project-progress-percent">70%</span>
+                            </div>
+                            <div class="project-progress-bar">
+                                <div class="project-progress-fill" data-progress="70"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: KomikStation -->
+                <div class="project-card reveal" style="--delay: 0.3s">
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1">
+                                <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z" />
+                                <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" />
+                            </svg>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="https://github.com/abdkupang" target="_blank" class="project-link">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">KomikStation</h3>
+                        <p class="project-desc">Platform baca komik online dengan fitur reader interaktif, profil
+                            pengguna, pencarian, dan sistem login/register.</p>
+                        <div class="project-tags">
+                            <span class="tag">PHP</span>
+                            <span class="tag">MySQL</span>
+                            <span class="tag">CSS</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-header">
+                                <span class="project-progress-label">Progress</span>
+                                <span class="project-progress-percent">85%</span>
+                            </div>
+                            <div class="project-progress-bar">
+                                <div class="project-progress-fill" data-progress="85"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: NontonFilm -->
+                <div class="project-card reveal" style="--delay: 0.4s">
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1">
+                                <rect x="2" y="2" width="20" height="20" rx="2.18" />
+                                <line x1="7" y1="2" x2="7" y2="22" />
+                                <line x1="17" y1="2" x2="17" y2="22" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <line x1="2" y1="7" x2="7" y2="7" />
+                                <line x1="2" y1="17" x2="7" y2="17" />
+                                <line x1="17" y1="17" x2="22" y2="17" />
+                                <line x1="17" y1="7" x2="22" y2="7" />
+                            </svg>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="https://github.com/abdkupang" target="_blank" class="project-link">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">NontonFilm</h3>
+                        <p class="project-desc">Platform streaming film online dengan fitur routing custom, migrasi
+                            database, dan sistem verifikasi pengguna.</p>
+                        <div class="project-tags">
+                            <span class="tag">PHP</span>
+                            <span class="tag">MySQL</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-header">
+                                <span class="project-progress-label">Progress</span>
+                                <span class="project-progress-percent">60%</span>
+                            </div>
+                            <div class="project-progress-bar">
+                                <div class="project-progress-fill" data-progress="60"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 5: Cari-Kerja -->
+                <div class="project-card reveal" style="--delay: 0.5s">
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                <path d="M8 11h6" />
+                                <path d="M11 8v6" />
+                            </svg>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="https://github.com/abdkupang" target="_blank" class="project-link">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Cari-Kerja</h3>
+                        <p class="project-desc">Portal pencarian kerja lengkap dengan fitur pelamar, perusahaan, dan
+                            manajemen lowongan pekerjaan.</p>
+                        <div class="project-tags">
+                            <span class="tag">Laravel</span>
+                            <span class="tag">PHP</span>
+                            <span class="tag">Vite</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-header">
+                                <span class="project-progress-label">Progress</span>
+                                <span class="project-progress-percent">50%</span>
+                            </div>
+                            <div class="project-progress-bar">
+                                <div class="project-progress-fill" data-progress="50"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 6: Bot WhatsApp -->
+                <div class="project-card reveal" style="--delay: 0.6s">
+                    <div class="project-image">
+                        <div class="project-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1">
+                                <path
+                                    d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
+                            </svg>
+                        </div>
+                        <div class="project-overlay">
+                            <a href="https://github.com/abdkupang" target="_blank" class="project-link">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                    <polyline points="15 3 21 3 21 9" />
+                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Bot WhatsApp</h3>
+                        <p class="project-desc">Bot WhatsApp otomatis menggunakan Node.js untuk auto-reply, broadcast
+                            pesan, dan integrasi API.</p>
+                        <div class="project-tags">
+                            <span class="tag">Node.js</span>
+                            <span class="tag">WhatsApp API</span>
+                            <span class="tag">JavaScript</span>
+                        </div>
+                        <div class="project-progress">
+                            <div class="project-progress-header">
+                                <span class="project-progress-label">Progress</span>
+                                <span class="project-progress-percent">65%</span>
+                            </div>
+                            <div class="project-progress-bar">
+                                <div class="project-progress-fill" data-progress="65"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-tag">&lt;contact&gt;</span>
+                <h2 class="section-title">Hubungi <span class="accent">Saya</span></h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info reveal reveal-left">
+                    <h3 class="contact-heading">Mari Berkolaborasi!</h3>
+                    <p class="contact-text">
+                        Tertarik untuk bekerja sama? Jangan ragu untuk menghubungi saya.
+                        Saya selalu terbuka untuk proyek baru dan ide-ide kreatif.
+                    </p>
+                    <div class="contact-items">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="contact-label">Email</span>
+                                <span class="contact-value">abdkupang46@gmail.com</span>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="contact-label">Lokasi</span>
+                                <span class="contact-value">Makassar, Indonesia</span>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="contact-label">Telepon</span>
+                                <span class="contact-value">+62 821 9648 1822</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://github.com/abdkupang" target="_blank" class="social-link" aria-label="GitHub">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" />
+                            </svg>
+                        </a>
+                        <a href="https://www.facebook.com/profile.php?id=100067903944019" target="_blank"
+                            class="social-link" aria-label="Facebook">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/abdkupang_" target="_blank" class="social-link"
+                            aria-label="Instagram">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <rect x="2" y="2" width="20" height="20" rx="5" />
+                                <circle cx="12" cy="12" r="5" />
+                                <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+                            </svg>
+                        </a>
+                        <a href="https://www.youtube.com/@abdkupang" target="_blank" class="social-link"
+                            aria-label="YouTube">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.tiktok.com/@abdkupang" target="_blank" class="social-link"
+                            aria-label="TikTok">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48v-7.13a8.16 8.16 0 004.77 1.53v-3.44a4.85 4.85 0 01-.81-.07 4.86 4.86 0 01-2.38-.88v-2z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <form class="contact-form reveal reveal-right" id="contact-form">
+                    <div class="form-group">
+                        <input type="text" id="name" class="form-input" placeholder=" " required>
+                        <label for="name" class="form-label">Nama Lengkap</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" class="form-input" placeholder=" " required>
+                        <label for="email" class="form-label">Email</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="subject" class="form-input" placeholder=" " required>
+                        <label for="subject" class="form-label">Subjek</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" class="form-input form-textarea" placeholder=" " rows="5"
+                            required></textarea>
+                        <label for="message" class="form-label">Pesan</label>
+                        <div class="form-line"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <span>Kirim Pesan</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <a href="#hero" class="footer-logo">
+                    <span class="logo-bracket">&lt;</span>DEV<span class="logo-bracket">/&gt;</span>
+                </a>
+                <p class="footer-text">
+                    &copy; 2026 Abdillah Mukhair Ismail. Dibuat dengan <span class="heart">&hearts;</span> dan ☕
+                </p>
+                <div class="footer-links">
+                    <a href="#about">About</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
