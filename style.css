@@ -52,6 +52,12 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+    display: none;
 }
 
 body {
@@ -1543,6 +1549,12 @@ ul {
     -webkit-backdrop-filter: blur(8px);
     overflow-y: auto;
     padding: 40px 20px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.modal-overlay::-webkit-scrollbar {
+    display: none;
 }
 
 .modal-overlay.active {
@@ -1624,6 +1636,9 @@ ul {
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .modal-project-card::before {
