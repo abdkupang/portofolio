@@ -1,0 +1,512 @@
+/* ─────────────────────────────────────────────────
+   detail.css — Project Detail Page
+   Clean, standalone, no overlap with global style
+───────────────────────────────────────────────── */
+
+/* TOKENS */
+:root {
+  --ink:     #0e0e0d;
+  --ink-2:   #3a3a37;
+  --ink-3:   #7a7a74;
+  --ink-4:   #b0b0a8;
+  --bg:      #f8f7f4;
+  --bg-2:    #f1f0ec;
+  --bg-3:    #e8e7e2;
+  --line:    #e2e1dc;
+  --line-2:  #d0cfc9;
+  --white:   #ffffff;
+  --accent:  #2563eb;
+  --acc-10:  rgba(37,99,235,.10);
+  --green:   #16a34a;
+  --amber:   #d97706;
+  --nav-h:   64px;
+  --max-w:   1080px;
+  --ease:    cubic-bezier(0.16,1,0.3,1);
+}
+
+/* RESET */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Outfit',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.6;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:2px}
+
+/* ── CURSOR ── */
+#cd{
+  position:fixed;pointer-events:none;z-index:9999;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--ink);transform:translate(-50%,-50%);
+  top:0;left:0;opacity:0;
+  transition:opacity .3s,width .2s var(--ease),height .2s var(--ease),
+             background .18s,border .18s;
+  mix-blend-mode:multiply;
+}
+#cr{
+  position:fixed;pointer-events:none;z-index:9998;
+  width:38px;height:38px;border-radius:50%;
+  border:1.5px solid rgba(14,14,13,.2);
+  transform:translate(-50%,-50%);
+  top:0;left:0;opacity:0;
+  transition:opacity .3s,width .32s var(--ease),height .32s var(--ease);
+}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:var(--nav-h);
+  background:rgba(248,247,244,.94);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 1px 16px rgba(0,0,0,.04);
+}
+.nav-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 28px;height:100%;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{
+  font-family:'Syne',sans-serif;
+  font-size:20px;font-weight:700;letter-spacing:-.03em;
+  transition:opacity .2s;
+}
+.nav-logo:hover{opacity:.65}
+.logo-dot{color:var(--accent)}
+.nav-links{display:flex;gap:32px}
+.nav-link{
+  font-size:13px;font-weight:500;color:var(--ink-3);
+  transition:color .2s;position:relative;
+}
+.nav-link::after{
+  content:'';position:absolute;bottom:-3px;left:0;
+  width:0;height:1.5px;background:var(--accent);
+  transition:width .25s var(--ease);
+}
+.nav-link:hover,.nav-link.active{color:var(--ink)}
+.nav-link:hover::after,.nav-link.active::after{width:100%}
+.nav-cta{
+  font-size:13px;font-weight:600;padding:8px 18px;
+  border-radius:6px;background:var(--ink);color:var(--white);
+  transition:all .2s;
+}
+.nav-cta:hover{background:var(--ink-2)}
+.nav-toggle{display:none;flex-direction:column;gap:5px;padding:4px}
+.nav-toggle span{
+  display:block;width:22px;height:1.5px;background:var(--ink);
+  transition:transform .3s var(--ease),opacity .2s;
+  transform-origin:center;
+}
+.nav-toggle.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-toggle.open span:nth-child(2){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* ── PAGE WRAPPER ── */
+.page{
+  max-width:var(--max-w);margin:0 auto;
+  padding:calc(var(--nav-h) + 44px) 28px 96px;
+}
+
+/* ── BACK ROW ── */
+.back-row{
+  display:flex;align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+  margin-bottom:40px;
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:500;color:var(--ink-3);
+  transition:color .2s;
+}
+.back-btn svg{transition:transform .2s;flex-shrink:0}
+.back-btn:hover{color:var(--accent)}
+.back-btn:hover svg{transform:translateX(-3px)}
+.top-actions{display:flex;gap:10px}
+
+/* ── HEADER ── */
+.d-header{
+  padding-bottom:28px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:40px;
+}
+.d-title-row{
+  display:flex;align-items:flex-start;
+  gap:12px;flex-wrap:wrap;
+  margin-bottom:10px;
+}
+.d-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(28px,5vw,56px);
+  font-weight:700;letter-spacing:-.04em;line-height:1.1;
+  flex:1;min-width:0;
+}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 12px;border-radius:100px;
+  font-size:11px;font-weight:600;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:.03em;flex-shrink:0;margin-top:8px;
+}
+.badge::before{
+  content:'';display:block;
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+}
+.badge-done{background:#dcfce7;color:#15803d}
+.badge-done::before{background:#16a34a}
+.badge-wip{background:#fef3c7;color:#b45309}
+.badge-wip::before{background:#d97706}
+
+.d-subtitle{
+  font-size:15px;color:var(--ink-3);font-weight:500;
+  margin-bottom:22px;
+}
+.d-progress{
+  display:flex;align-items:center;gap:12px;
+  max-width:260px;
+}
+.d-progress-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--ink-3);white-space:nowrap;
+}
+.d-progress-track{
+  flex:1;height:2px;background:var(--line);
+  border-radius:2px;overflow:hidden;
+}
+.d-progress-fill{
+  height:100%;background:var(--ink);
+  border-radius:2px;width:0;
+  transition:width 1.1s var(--ease);
+}
+.d-progress-pct{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--ink-3);white-space:nowrap;
+}
+
+/* ── VISUAL SECTION ──
+   Desktop: full width.
+   Mobile phone: absolute overlay bottom-right.
+   .d-visual is the position:relative container.
+   Never set overflow:hidden on .d-visual!
+───────────────────── */
+.d-visual{
+  position:relative;
+  margin-bottom:40px;
+  overflow:visible; /* allow dragged images to leave bounds */
+}
+.d-visual.has-mobile{
+  margin-bottom:40px; /* phone is INSIDE desktop, no extra space needed */
+}
+
+/* Desktop screenshot — position:relative so phone anchors inside it */
+.d-desktop{
+  width:100%;
+  border-radius:16px;
+  overflow:hidden; /* clips phone neatly inside rounded corners */
+  border:1px solid var(--line);
+  background:var(--bg-3);
+  aspect-ratio:16/9;
+  position:relative; /* stacking context for .d-mobile */
+}
+.d-desktop img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:top;
+  display:block;
+}
+
+/* Mobile phone — anchored INSIDE the .d-desktop box */
+.d-mobile{
+  position:absolute;
+  bottom:14px;   /* inside the desktop screenshot */
+  right:18px;    /* inside, near right edge */
+  width:18%;
+  min-width:76px;
+  max-width:130px;
+  border-radius:18px;
+  overflow:hidden;
+  border:3px solid rgba(255,255,255,.9);
+  background:var(--ink);
+  box-shadow:
+    0 10px 32px rgba(0,0,0,.35),
+    0 3px 10px rgba(0,0,0,.2);
+  aspect-ratio:9/19.5;
+  z-index:3;
+  transform:rotate(2deg);
+  transition:transform .4s var(--ease);
+  pointer-events:none; /* don't block desktop image hover/drag */
+}
+.d-visual:hover .d-mobile{
+  transform:rotate(0deg) scale(1.04);
+}
+.d-mobile img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:top;
+  display:block;
+}
+
+/* Caption below visual */
+.d-visual-caption{
+  /* Positioned AFTER the visual in flow, gets pushed down by .d-visual margin-bottom */
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--ink-4);
+  letter-spacing:.08em;text-transform:uppercase;
+  /* margin-top accounts for phone hanging below screenshot */
+  margin-top:12px;
+}
+.d-visual-caption::before,
+.d-visual-caption::after{
+  content:'';flex:1;height:1px;background:var(--line);
+}
+
+/* ── TAGS ── */
+.d-tags{
+  padding:20px 22px;
+  background:var(--bg-2);
+  border:1px solid var(--line);
+  border-radius:12px;
+  margin-bottom:36px;
+}
+.d-tags-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--ink-3);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:7px;
+}
+.d-tags-list{display:flex;gap:6px;flex-wrap:wrap}
+.tag{
+  display:inline-flex;align-items:center;
+  padding:4px 10px;border-radius:100px;
+  font-size:11.5px;font-weight:500;
+  font-family:'JetBrains Mono',monospace;
+  background:var(--bg-3);border:1px solid var(--line);
+  color:var(--ink-2);white-space:nowrap;
+}
+.tag-p{
+  background:var(--acc-10);
+  border-color:rgba(37,99,235,.22);
+  color:var(--accent);
+}
+
+/* ── README ── */
+.d-readme{margin-bottom:52px}
+.d-readme-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--ink-3);
+  letter-spacing:.1em;text-transform:uppercase;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:26px;
+  display:flex;align-items:center;gap:7px;
+}
+.d-readme-content{
+  font-size:15px;color:var(--ink-2);
+  line-height:1.85;font-weight:350;
+}
+.d-readme-content h1{
+  font-family:'Syne',sans-serif;
+  font-size:24px;font-weight:700;
+  letter-spacing:-.03em;color:var(--ink);
+  margin:0 0 16px;
+}
+.d-readme-content h2{
+  font-family:'Syne',sans-serif;
+  font-size:18px;font-weight:700;
+  letter-spacing:-.02em;color:var(--ink);
+  margin:40px 0 12px;
+  padding-top:28px;
+  border-top:1px solid var(--line);
+}
+.d-readme-content h2:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.d-readme-content h3{font-size:15px;font-weight:700;color:var(--ink);margin:24px 0 8px}
+.d-readme-content p{margin-bottom:14px}
+.d-readme-content p:last-child{margin-bottom:0}
+.d-readme-content strong{color:var(--ink);font-weight:600}
+.d-readme-content em{font-style:italic;color:var(--ink-3)}
+.d-readme-content a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.d-readme-content code{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  background:var(--bg-3);padding:2px 6px;
+  border-radius:4px;color:var(--ink);border:1px solid var(--line);
+}
+.d-readme-content pre{
+  background:var(--ink);border-radius:10px;
+  padding:20px 22px;overflow-x:auto;margin:20px 0;
+}
+.d-readme-content pre code{
+  background:none;border:none;
+  color:#c8c8c0;font-size:12.5px;line-height:1.7;padding:0;
+}
+.d-readme-content ul{padding-left:20px;list-style:disc;margin:0 0 14px}
+.d-readme-content ol{padding-left:20px;list-style:decimal;margin:0 0 14px}
+.d-readme-content li{margin-bottom:5px}
+.d-readme-content hr{border:none;border-top:1px solid var(--line);margin:24px 0}
+.d-readme-content blockquote{
+  border-left:3px solid var(--accent);
+  padding-left:16px;color:var(--ink-3);
+  margin:16px 0;font-style:italic;
+}
+/* Table */
+.d-readme-content .md-table{overflow-x:auto;margin:18px 0}
+.d-readme-content .md-table table{
+  width:100%;border-collapse:collapse;font-size:13.5px;
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;
+}
+.d-readme-content .md-table th,
+.d-readme-content .md-table td{
+  padding:10px 16px;border-bottom:1px solid var(--line);text-align:left;
+}
+.d-readme-content .md-table th{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10.5px;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink);background:var(--bg-2);
+}
+.d-readme-content .md-table td{color:var(--ink-2)}
+.d-readme-content .md-table tr:last-child td{border-bottom:none}
+
+/* ── CTA ── */
+.d-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 22px;border-radius:6px;
+  font-size:13.5px;font-weight:600;
+  transition:all .2s var(--ease);white-space:nowrap;
+}
+.btn svg{flex-shrink:0}
+.btn-dark{background:var(--ink);color:var(--white)}
+.btn-dark:hover{background:var(--ink-2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.btn-dark:active{transform:translateY(0)}
+.btn-border{background:transparent;color:var(--ink);border:1.5px solid var(--line-2)}
+.btn-border:hover{border-color:var(--ink);background:var(--ink);color:var(--white)}
+.btn-sm{padding:8px 16px;font-size:12.5px}
+
+/* ── LOADING / ERROR ── */
+.d-loading{
+  min-height:360px;
+  display:flex;align-items:center;justify-content:center;
+}
+.spinner{
+  width:28px;height:28px;
+  border:2px solid var(--line);border-top-color:var(--ink);
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.d-error{text-align:center;padding:80px 24px;color:var(--ink-3)}
+.d-error h2{
+  font-family:'Syne',sans-serif;font-size:24px;
+  margin-bottom:16px;color:var(--ink);
+}
+
+/* ── REVEAL ── */
+.rev{
+  opacity:0;transform:translateY(22px);
+  transition:opacity .6s var(--ease),transform .6s var(--ease);
+  transition-delay:var(--d,0s);
+}
+.rev.in{opacity:1;transform:none}
+
+/* ── FOOTER ── */
+.footer{border-top:1px solid var(--line);padding:32px 0}
+.footer-inner{
+  max-width:var(--max-w);margin:0 auto;padding:0 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-copy{font-size:12px;color:var(--ink-3)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:var(--ink-3);transition:color .2s}
+.footer-links a:hover{color:var(--ink)}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:768px){
+  :root{--nav-h:56px}
+  .page{padding:calc(var(--nav-h)+24px) 20px 72px}
+  .nav-inner{padding:0 20px}
+  .nav-links{
+    position:fixed;top:var(--nav-h);left:0;right:0;
+    background:rgba(248,247,244,.98);backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--line);
+    flex-direction:column;align-items:flex-start;
+    padding:20px;gap:0;
+    transform:translateY(-110%);opacity:0;
+    transition:transform .32s var(--ease),opacity .22s;
+    pointer-events:none;
+  }
+  .nav-links.open{transform:translateY(0);opacity:1;pointer-events:all}
+  .nav-link{padding:14px 0;font-size:15px;width:100%;border-bottom:1px solid var(--line)}
+  .nav-link::after{display:none}
+  .nav-cta{display:none}
+  .nav-toggle{display:flex}
+
+  .back-row{margin-bottom:28px}
+  .d-header{margin-bottom:28px;padding-bottom:22px}
+
+  /* Mobile phone overlay: smaller but still visible */
+  .d-visual.has-mobile{margin-bottom:36px}
+  .d-mobile{
+    width:20%;
+    min-width:64px;max-width:100px;
+    bottom:12px;right:12px; /* stay inside */
+    border-radius:12px;border-width:2px;
+  }
+
+  .d-progress{max-width:100%}
+  .footer-inner{flex-direction:column;text-align:center;gap:10px}
+  .footer-inner .nav-logo{margin:0 auto}
+  #cd,#cr{display:none}
+}
+
+@media(max-width:480px){
+  .page{padding-left:16px;padding-right:16px}
+  .nav-inner,.footer-inner{padding-left:16px;padding-right:16px}
+  .d-title{font-size:clamp(24px,7vw,36px)}
+  .d-visual.has-mobile{margin-bottom:32px}
+  .d-mobile{
+    width:22%;min-width:58px;
+    bottom:10px;right:10px; /* inside */
+    border-radius:10px;border-width:2px;
+  }
+  .d-cta{flex-direction:column}
+  .d-cta .btn{justify-content:center}
+}
+
+/* ═══════════════════════════════════════════════
+   TECH BADGES (from tech-icons.js)
+═══════════════════════════════════════════════ */
+.tech-badge {
+  cursor: default;
+  will-change: transform;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.tech-badge svg {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.d-tags-list { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* ── PHYSICS ── */
+/* Only desktop img is draggable — mobile overlay is decorative */
+.d-desktop img { cursor: grab; will-change: transform; }
+.d-desktop img:active { cursor: grabbing; }
+/* d-mobile is not interactive — it's a visual overlay inside d-desktop */
+.d-mobile { pointer-events: none; }
+
+/* d-visual allows dragged images to overflow visually */
+.d-visual { overflow: visible; }
+/* d-desktop clips the phone inside rounded corners */
+.d-visual .d-desktop { overflow: hidden; }
