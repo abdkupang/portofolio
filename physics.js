@@ -1,576 +1,411 @@
 /* ─────────────────────────────────────────────────────
-   physics.js  v4
-   Rules:
-   • Card hover → subtle glow/lift only (NO 3D tilt on card)
-   • Image hover inside card → 3D tilt + scale on IMAGE only
-   • Drag is only on images, not cards (cards stay clickable)
-   • Profile photo: z-index 99999 when dragged (above navbar)
-   • Mobile phone overlays: contained, not draggable (just CSS)
-   • Magnetic effect on buttons only
-   • Ripple on click
-   • Chaos mode: G×3
+   physics.js  v5  (ringan + mobile + sound)
+
+   • Drag & lempar gambar → Pointer Events (mouse/pen). Di layar
+     sentuh, tap pada gambar = memantul (scroll tetap normal).
+   • Foto profil di hero bisa diseret/dilempar, naik di atas navbar.
+   • Tilt 3D saat hover screenshot (di-throttle per frame).
+   • Tombol magnetik, ripple, chaos mode (G×3) memakai event delegation
+     yang dipasang SEKALI. Versi lama memasang ulang listener tiap
+     `portfolioRendered` → menumpuk dan bikin lag.
+   • Efek hover kartu / badge / skill dipindah ke CSS (tanpa JS).
+   • Suara lewat window.SFX (sfx.js), aman bila tidak termuat.
 ───────────────────────────────────────────────────── */
 (function () {
   'use strict';
 
-  /* ── Desktop only ── */
-  const isFine = window.matchMedia('(pointer:fine)').matches;
+  const fine   = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp  = (v, a, b) => Math.max(a, Math.min(b, v));
+  const sfx    = (name, arg) => { try { window.SFX && window.SFX.play(name, arg); } catch (_) {} };
 
-  /* ── UTILS ── */
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const lerp  = (a, b, t) => a + (b - a) * t;
-
-  /* ─────────────────────────────────────────────────
-     RIPPLE
-  ───────────────────────────────────────────────── */
-  function spawnRipple(x, y, color = 'rgba(14,14,13,.10)') {
-    const el = Object.assign(document.createElement('div'), {});
-    Object.assign(el.style, {
-      position:      'fixed',
-      left:          x + 'px',
-      top:           y + 'px',
-      width:         '6px',
-      height:        '6px',
-      borderRadius:  '50%',
-      background:    color,
-      transform:     'translate(-50%,-50%) scale(1)',
-      pointerEvents: 'none',
-      zIndex:        '8000',
-      opacity:       '0.7',
-      transition:    'transform .55s ease-out, opacity .55s ease-out',
-    });
+  /* ── RIPPLE (Web Animations, maksimal 5 sekaligus) ── */
+  let liveRipples = 0;
+  function spawnRipple(x, y, color) {
+    if (liveRipples >= 5) return;
+    liveRipples++;
+    const el = document.createElement('div');
+    el.style.cssText =
+      `position:fixed;left:${x}px;top:${y}px;width:140px;height:140px;margin:-70px 0 0 -70px;` +
+      `border-radius:50%;background:${color || 'rgba(14,14,13,.10)'};pointer-events:none;z-index:8000;`;
     document.body.appendChild(el);
-    requestAnimationFrame(() => {
-      el.style.transform = 'translate(-50%,-50%) scale(22)';
-      el.style.opacity   = '0';
-    });
-    setTimeout(() => el.remove(), 600);
+    const a = el.animate(
+      [{ transform: 'scale(.04)', opacity: .7 }, { transform: 'scale(1)', opacity: 0 }],
+      { duration: 520, easing: 'ease-out' }
+    );
+    a.onfinish = a.oncancel = () => { el.remove(); liveRipples--; };
   }
 
   /* ─────────────────────────────────────────────────
-     DRAG ENGINE — only for images
+     DRAG ENGINE (gambar)
   ───────────────────────────────────────────────── */
   let dragging = null;
+  let prevMx = 0, mouseVx = 0;
 
-  function makeDraggable(img, opts = {}) {
-    const { isProfilePhoto = false } = opts;
+  window.addEventListener('pointermove', e => {
+    mouseVx = e.clientX - prevMx;
+    prevMx  = e.clientX;
+    if (!dragging || e.pointerId !== dragging.pointerId) return;
+    const d = dragging;
+    const nx = e.clientX - d.startX;
+    const ny = e.clientY - d.startY;
+    d.velX = nx - d.ctl.x();
+    d.velY = ny - d.ctl.y();
+    d.ctl.drag(nx, ny, clamp(mouseVx * 1.8, -30, 30));
+  }, { passive: true });
 
-    img.style.cursor     = 'grab';
+  function endDrag(e) {
+    if (!dragging || e.pointerId !== dragging.pointerId) return;
+    const d = dragging;
+    dragging = null;
+    d.ctl.release(d.velX, d.velY);
+  }
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
+
+  function makeDraggable(img) {
+    const lift = img.closest('.hero-photo');           // container yang ikut naik di atas navbar
+    let tx = 0, ty = 0, rot = 0, sc = 1, tiltX = 0, tiltY = 0;
+    let vx = 0, vy = 0, rafId = 0, busy = false, touchStart = null;
+
+    img.draggable = false;
     img.style.userSelect = 'none';
-    img.style.willChange = 'transform';
-    img.draggable        = false; // disable native drag
+    img.style.webkitUserSelect = 'none';
+    if (fine) img.style.cursor = 'grab';
 
-    /* current physics state */
-    let tx = 0, ty = 0, rot = 0, sc = 1;
-    let vx = 0, vy = 0;
-    let rafId = null;
+    function apply() {
+      const tilt = (tiltX || tiltY) ? `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) ` : '';
+      img.style.transform = `${tilt}translate3d(${tx}px,${ty}px,0) rotate(${rot}deg) scale(${sc})`;
+    }
+    const setTransition = t => { img.style.transition = t; };
+    function stopAnim() { if (rafId) { cancelAnimationFrame(rafId); rafId = 0; } }
 
-    function applyT() {
-      img.style.transform = `translate(${tx}px,${ty}px) rotate(${rot}deg) scale(${sc})`;
+    function settleDone() {
+      tx = ty = rot = tiltX = tiltY = 0; sc = 1;
+      apply();
+      busy = false;
+      img.style.zIndex = '';
+      img.style.position = '';
+      img.style.willChange = '';
+      img.style.transform = '';
+      if (lift) lift.style.zIndex = '';
     }
 
-    /* —— hover wobble —— */
-    img.addEventListener('mouseenter', () => {
-      if (dragging) return;
-      img.style.transition = 'transform .2s';
-      rot = (Math.random() - .5) * 5;
-      sc  = 1.05;
-      applyT();
-      setTimeout(() => { img.style.transition = ''; }, 220);
-    });
-
-    img.addEventListener('mouseleave', () => {
-      if (dragging) return;
-      /* spring back immediately on mouseleave if not dragged */
-      img.style.transition = 'transform .35s cubic-bezier(.16,1,.3,1)';
-      tx = 0; ty = 0; rot = 0; sc = 1;
-      applyT();
-      setTimeout(() => { img.style.transition = ''; }, 380);
-    });
-
-    /* —— mousedown → start drag —— */
-    img.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return;
-      e.preventDefault();
-      e.stopPropagation(); /* don't let card receive this */
-
-      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      img.style.transition = '';
-      img.style.cursor     = 'grabbing';
-
-      /* z-index strategy */
-      if (isProfilePhoto) {
-        /* Profile photo must float above EVERYTHING — nav is z:200 */
-        img.style.position = 'relative';
-        img.style.zIndex   = '99999';
-      } else {
-        img.style.zIndex = '500';
-      }
-
-      dragging = {
-        img, isProfilePhoto,
-        startX: e.clientX - tx,
-        startY: e.clientY - ty,
-        prevX:  e.clientX,
-        prevY:  e.clientY,
-        velX:   0, velY: 0,
-      };
-
-      spawnRipple(e.clientX, e.clientY, 'rgba(37,99,235,.18)');
-    });
-
-    /* —— spring back —— */
     function springBack(initVx, initVy) {
-      vx = initVx * 0.25;
-      vy = initVy * 0.25;
-
-      function tick() {
-        const stiffness = 0.14;
-        const friction  = 0.82;
-
-        vx = vx * friction - tx * stiffness;
-        vy = vy * friction - ty * stiffness;
+      vx = initVx * .25; vy = initVy * .25;
+      (function tick() {
+        vx = vx * .82 - tx * .14;
+        vy = vy * .82 - ty * .14;
         tx += vx; ty += vy;
-        rot = rot * 0.80;
-        sc  = sc + (1 - sc) * 0.18;
-        applyT();
-
-        const done = Math.abs(tx)  < 0.25 && Math.abs(ty)  < 0.25 &&
-                     Math.abs(vx)  < 0.25 && Math.abs(vy)  < 0.25 &&
-                     Math.abs(rot) < 0.1;
-
-        if (done) {
-          tx = 0; ty = 0; rot = 0; sc = 1;
-          applyT();
-          img.style.zIndex   = '';
-          img.style.position = '';
-          return;
-        }
+        rot *= .8;
+        sc += (1 - sc) * .18;
+        apply();
+        const done = Math.abs(tx) < .25 && Math.abs(ty) < .25 &&
+                     Math.abs(vx) < .25 && Math.abs(vy) < .25 && Math.abs(rot) < .1;
+        if (done) { settleDone(); sfx('settle'); return; }
         rafId = requestAnimationFrame(tick);
-      }
-      rafId = requestAnimationFrame(tick);
+      })();
     }
 
-    /* —— throw animation —— */
-    function throwAnim(throwVx, throwVy) {
-      vx  = throwVx * 0.55;
-      vy  = throwVy * 0.55;
-      const friction = 0.94;
-      const gravity  = 0.35;
-      let   bounces  = 0;
+    function throwAnim(tvx, tvy) {
+      vx = tvx * .55; vy = tvy * .55;
+      let bounces = 0;
+      (function tick() {
+        vy += .35; vx *= .94;
+        tx += vx; ty += vy;
+        rot += vx * .7; rot *= .96;
+        sc += (1 - sc) * .06;
+        apply();
 
-      function tick() {
-        vy  += gravity;
-        vx  *= friction;
-        tx  += vx; ty += vy;
-        rot += vx * 0.7;
-        rot *= 0.96;
-        sc   = sc + (1 - sc) * 0.06;
-        applyT();
-
-        /* viewport bounce */
-        const r  = img.getBoundingClientRect();
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-
+        const r = img.getBoundingClientRect();       // 1 elemen saja, hanya saat dilempar
+        const vw = window.innerWidth, vh = window.innerHeight;
         if (r.bottom > vh && bounces < 4) {
-          vy   = -Math.abs(vy) * 0.45;
-          ty  -= (r.bottom - vh);
-          vx  *= 0.75;
-          bounces++;
+          sfx('bounce', clamp(Math.abs(vy) / 14, .25, 1));
+          vy = -Math.abs(vy) * .45; ty -= (r.bottom - vh); vx *= .75; bounces++;
         }
-        if (r.right  > vw) { vx = -Math.abs(vx) * 0.55; }
-        if (r.left   < 0)  { vx =  Math.abs(vx) * 0.55; }
-        if (r.top    < 0)  { vy =  Math.abs(vy) * 0.4; }
+        if (r.right > vw) { vx = -Math.abs(vx) * .55; sfx('bounce', .35); }
+        if (r.left < 0)   { vx =  Math.abs(vx) * .55; sfx('bounce', .35); }
+        if (r.top < 0)    { vy =  Math.abs(vy) * .4; }
 
-        const settled = Math.abs(vx) < 0.3 && Math.abs(vy) < 0.3 && r.bottom >= vh - 4;
-        if (settled || bounces >= 4) {
+        if ((Math.abs(vx) < .3 && Math.abs(vy) < .3 && r.bottom >= vh - 4) || bounces >= 4) {
           springBack(vx, vy);
           return;
         }
         rafId = requestAnimationFrame(tick);
-      }
-      rafId = requestAnimationFrame(tick);
+      })();
     }
 
-    /* expose for mouseup handler */
-    img._physRelease = (relVx, relVy) => {
-      img.style.cursor = 'grab';
-      const speed = Math.sqrt(relVx ** 2 + relVy ** 2);
-      if (speed > 2.5) {
-        throwAnim(relVx, relVy);
+    /* hover wobble (mouse saja) */
+    if (fine) {
+      img.addEventListener('pointerenter', e => {
+        if (e.pointerType !== 'mouse' || dragging || busy) return;
+        img.style.willChange = 'transform';
+        setTransition('transform .2s');
+        rot = (Math.random() - .5) * 5; sc = 1.05;
+        apply();
+      });
+      img.addEventListener('pointerleave', e => {
+        if (e.pointerType !== 'mouse' || dragging || busy) return;
+        setTransition('transform .35s cubic-bezier(.16,1,.3,1)');
+        tx = ty = rot = tiltX = tiltY = 0; sc = 1;
+        apply();
+        setTimeout(() => { if (!dragging && !busy) { setTransition(''); img.style.willChange = ''; img.style.transform = ''; } }, 400);
+      });
+    }
+
+    /* mulai drag (mouse/pen) atau catat tap (touch) */
+    img.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'touch') { touchStart = { t: performance.now(), x: e.clientX, y: e.clientY }; return; }
+      if (e.button !== 0) return;
+      e.preventDefault();
+      stopAnim();
+      setTransition('');
+      busy = true;
+      img.style.cursor = 'grabbing';
+      img.style.willChange = 'transform';
+      if (lift) {
+        lift.style.zIndex = '99998';
+        img.style.position = 'relative';
+        img.style.zIndex = '99999';
       } else {
-        springBack(relVx, relVy);
+        img.style.zIndex = '500';
       }
+      try { img.setPointerCapture(e.pointerId); } catch (_) {}
+      dragging = { ctl, pointerId: e.pointerId, startX: e.clientX - tx, startY: e.clientY - ty, velX: 0, velY: 0 };
+      spawnRipple(e.clientX, e.clientY, 'rgba(37,99,235,.18)');
+    });
+
+    /* tap di layar sentuh → memantul */
+    img.addEventListener('pointerup', e => {
+      if (e.pointerType !== 'touch' || !touchStart) return;
+      const quick = performance.now() - touchStart.t < 350 &&
+                    Math.hypot(e.clientX - touchStart.x, e.clientY - touchStart.y) < 10;
+      touchStart = null;
+      if (!quick || reduce || busy) return;
+      busy = true;
+      const a = img.animate([
+        { transform: 'scale(1) rotate(0deg)' },
+        { transform: 'scale(1.07) rotate(-2.5deg)', offset: .35 },
+        { transform: 'scale(.97) rotate(1.5deg)',   offset: .7 },
+        { transform: 'scale(1) rotate(0deg)' },
+      ], { duration: 520, easing: 'cubic-bezier(.34,1.56,.64,1)' });
+      a.onfinish = a.oncancel = () => { busy = false; };
+    });
+    img.addEventListener('pointercancel', () => { touchStart = null; });
+
+    const ctl = {
+      x: () => tx,
+      y: () => ty,
+      drag(nx, ny, r) { tx = nx; ty = ny; rot = r; sc = 1.06; apply(); },
+      release(rvx, rvy) {
+        img.style.cursor = fine ? 'grab' : '';
+        sfx('drop');
+        Math.hypot(rvx, rvy) > 2.5 ? throwAnim(rvx, rvy) : springBack(rvx, rvy);
+      },
+      tilt(x, y) {
+        if (busy && !dragging) return;
+        if (dragging) return;
+        tiltX = x; tiltY = y; rot = 0; sc = 1.06;
+        img.style.willChange = 'transform';
+        setTransition('transform .12s ease-out');
+        apply();
+      },
     };
-    img._getTx = () => tx;
-    img._getTy = () => ty;
-    img._setTx = v => { tx = v; };
-    img._setTy = v => { ty = v; };
-    img._setRot = v => { rot = v; };
-    img._setSc  = v => { sc = v; };
-    img._applyT = applyT;
+    return ctl;
   }
 
-  /* —— Global mouse tracking for drag —— */
-  let mouseVx = 0, mouseVy = 0, prevMx = 0, prevMy = 0;
-  window.addEventListener('mousemove', (e) => {
-    mouseVx = e.clientX - prevMx;
-    mouseVy = e.clientY - prevMy;
-    prevMx  = e.clientX;
-    prevMy  = e.clientY;
-
-    if (!dragging) return;
-    const d  = dragging;
-    const nx = e.clientX - d.startX;
-    const ny = e.clientY - d.startY;
-    d.velX   = nx - d.img._getTx();
-    d.velY   = ny - d.img._getTy();
-    d.img._setTx(nx);
-    d.img._setTy(ny);
-    d.img._setRot(clamp(mouseVx * 1.8, -30, 30));
-    d.img._setSc(1.06);
-    d.img._applyT();
-  }, { passive: true });
-
-  window.addEventListener('mouseup', () => {
-    if (!dragging) return;
-    const d = dragging;
-    dragging = null;
-    d.img._physRelease(d.velX, d.velY);
-  });
-
   /* ─────────────────────────────────────────────────
-     IMAGE HOVER — 3D tilt on the IMAGE element itself
-     (NOT on the card — cards must stay clickable)
+     TILT 3D screenshot (throttle: 1× per frame)
   ───────────────────────────────────────────────── */
   function initImageHoverTilt() {
-    /* Desktop screenshots */
     document.querySelectorAll('.fi-desktop, .card-desktop-thumb, .d-desktop, .detail-dsk').forEach(wrap => {
+      if (wrap._tilt) return;
       const img = wrap.querySelector('img');
-      if (!img) return;
-
-      wrap.addEventListener('mousemove', (e) => {
-        if (dragging) return;
-        const r  = wrap.getBoundingClientRect();
-        const dx = (e.clientX - r.left  - r.width  / 2) / (r.width  / 2);
-        const dy = (e.clientY - r.top   - r.height / 2) / (r.height / 2);
-        const tX =  dy * 8;
-        const tY = -dx * 8;
-        img.style.transition = 'transform .12s';
-        img.style.transform  = `perspective(600px) rotateX(${tX}deg) rotateY(${tY}deg) scale(1.06)`;
-      });
-
-      wrap.addEventListener('mouseleave', () => {
-        img.style.transition = 'transform .4s cubic-bezier(.16,1,.3,1)';
-        img.style.transform  = '';
-      });
+      if (!img || !img._ctl) return;
+      wrap._tilt = true;
+      let raf = 0, ex = 0, ey = 0;
+      wrap.addEventListener('pointermove', e => {
+        if (e.pointerType !== 'mouse' || dragging) return;
+        ex = e.clientX; ey = e.clientY;
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          const r  = wrap.getBoundingClientRect();
+          const dx = (ex - r.left - r.width  / 2) / (r.width  / 2);
+          const dy = (ey - r.top  - r.height / 2) / (r.height / 2);
+          img._ctl.tilt(dy * 8, -dx * 8);
+        });
+      }, { passive: true });
     });
   }
 
   /* ─────────────────────────────────────────────────
-     CARD HOVER — lift + glow only, NO tilt, NO pointer-events block
+     GLOBAL (dipasang sekali): magnetic, ripple, chaos
   ───────────────────────────────────────────────── */
-  function initCardHover() {
-    document.querySelectorAll('.project-card').forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        card.style.transition  = 'transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s';
-        card.style.transform   = 'translateY(-6px)';
-        card.style.boxShadow   = '0 24px 64px rgba(0,0,0,.10)';
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transition  = 'transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s';
-        card.style.transform   = '';
-        card.style.boxShadow   = '';
-      });
-    });
+  function setupMagnetic() {
+    const SEL = '.btn, .nav-cta, .filter-btn, .nav-link, .nav-logo';
+    const strength = el => el.matches('.nav-link, .nav-logo') ? .18 : el.matches('.filter-btn') ? .22 : .28;
+    let cur = null, ox = 0, oy = 0, raf = 0, ev = null;
 
-    /* Featured item: subtle scale only */
-    document.querySelectorAll('.featured-item').forEach(fi => {
-      fi.addEventListener('mouseenter', () => {
-        fi.style.transition  = 'background .2s';
-        fi.style.background  = 'rgba(14,14,13,.015)';
-      });
-      fi.addEventListener('mouseleave', () => {
-        fi.style.background = '';
-      });
-    });
-  }
-
-  /* ─────────────────────────────────────────────────
-     MAGNETIC BUTTONS
-  ───────────────────────────────────────────────── */
-  function makeMagnetic(el, strength = 0.32) {
-    let ox = 0, oy = 0;
-    el.addEventListener('mousemove', (e) => {
-      const r = el.getBoundingClientRect();
-      ox = (e.clientX - (r.left + r.width  / 2)) * strength;
-      oy = (e.clientY - (r.top  + r.height / 2)) * strength;
-      el.style.transition = 'transform .12s';
-      el.style.transform  = `translate(${ox}px,${oy}px)`;
-    });
-    el.addEventListener('mouseleave', () => {
+    function leave() {
+      if (!cur) return;
+      const el = cur;
       el.style.transition = 'transform .4s cubic-bezier(.16,1,.3,1)';
-      el.style.transform  = '';
-    });
-    el.addEventListener('mousedown', () => {
-      el.style.transition = 'transform .08s';
-      el.style.transform  = `translate(${ox*.5}px,${oy*.5}px) scale(.95)`;
-    });
-    el.addEventListener('mouseup', () => {
-      el.style.transition = 'transform .2s cubic-bezier(.16,1,.3,1)';
-      el.style.transform  = `translate(${ox}px,${oy}px)`;
-    });
-  }
+      el.style.transform = '';
+      setTimeout(() => { if (el !== cur) el.style.transition = ''; }, 420);
+      cur = null; ox = oy = 0;
+    }
 
-  function initMagneticButtons() {
-    document.querySelectorAll('.btn, .nav-cta').forEach(el => makeMagnetic(el, 0.28));
-    document.querySelectorAll('.filter-btn').forEach(el => makeMagnetic(el, 0.22));
-    document.querySelectorAll('.nav-link, .nav-logo').forEach(el => makeMagnetic(el, 0.18));
-  }
-
-  /* ─────────────────────────────────────────────────
-     BADGE HOVER PHYSICS
-  ───────────────────────────────────────────────── */
-  function initBadgePhysics() {
-    document.addEventListener('mouseover', (e) => {
-      const b = e.target.closest('.tech-badge');
-      if (!b) return;
-      b.style.transition  = 'transform .15s, box-shadow .15s';
-      b.style.transform   = 'translateY(-3px) scale(1.09)';
-      b.style.boxShadow   = '0 6px 20px rgba(0,0,0,.22)';
-    });
-    document.addEventListener('mouseout', (e) => {
-      const b = e.target.closest('.tech-badge');
-      if (!b) return;
-      b.style.transition  = 'transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s';
-      b.style.transform   = '';
-      b.style.boxShadow   = '0 1px 4px rgba(0,0,0,.18)';
-    });
-    document.addEventListener('mousedown', (e) => {
-      const b = e.target.closest('.tech-badge');
-      if (!b) return;
-      b.style.transform = 'scale(.9)';
-    });
-    document.addEventListener('mouseup', (e) => {
-      const b = e.target.closest('.tech-badge');
-      if (!b) return;
-      b.style.transform = 'translateY(-3px) scale(1.09)';
-    });
-  }
-
-  /* ─────────────────────────────────────────────────
-     SKILL BAR INTERACTION
-  ───────────────────────────────────────────────── */
-  function initSkillBars() {
-    document.querySelectorAll('.skill-item').forEach(item => {
-      item.addEventListener('mouseenter', () => {
-        const fill = item.querySelector('.skill-fill');
-        if (fill) {
-          fill.style.transition = 'background .2s, box-shadow .2s';
-          fill.style.background = '#2563eb';
-          fill.style.boxShadow  = '0 0 10px rgba(37,99,235,.4)';
-        }
-        item.style.transition = 'background .2s';
-        item.style.background = 'var(--paper-2)';
+    document.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse' || dragging) return;
+      const el = e.target.closest ? e.target.closest(SEL) : null;
+      if (el !== cur) { leave(); cur = el; if (cur) cur.style.transition = 'transform .12s'; }
+      if (!cur) return;
+      ev = e;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        if (!cur || !ev) return;
+        const r = cur.getBoundingClientRect();
+        const k = strength(cur);
+        ox = (ev.clientX - (r.left + r.width  / 2 - ox)) * k;   // koreksi offset sendiri → tidak "melayang"
+        oy = (ev.clientY - (r.top  + r.height / 2 - oy)) * k;
+        cur.style.transform = `translate(${ox}px,${oy}px)`;
       });
-      item.addEventListener('mouseleave', () => {
-        const fill = item.querySelector('.skill-fill');
-        if (fill) {
-          fill.style.background = '';
-          fill.style.boxShadow  = '';
-        }
-        item.style.background = '';
-      });
-    });
+    }, { passive: true });
+
+    document.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'mouse' || !cur) return;
+      cur.style.transition = 'transform .08s';
+      cur.style.transform = `translate(${ox * .5}px,${oy * .5}px) scale(.95)`;
+    }, { passive: true });
+    document.addEventListener('pointerup', e => {
+      if (e.pointerType !== 'mouse' || !cur) return;
+      cur.style.transition = 'transform .2s cubic-bezier(.16,1,.3,1)';
+      cur.style.transform = `translate(${ox}px,${oy}px)`;
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', leave);
   }
 
-  /* ─────────────────────────────────────────────────
-     FLOATING HERO STATS
-  ───────────────────────────────────────────────── */
-  function initFloatingStats() {
-    document.querySelectorAll('.hero-stat').forEach((el, i) => {
-      let phase = i * 1.2;
-      (function tick() {
-        phase += 0.016;
-        el.style.transform = `translateY(${Math.sin(phase) * 4}px)`;
-        requestAnimationFrame(tick);
-      })();
-    });
+  function setupRipple() {
+    document.addEventListener('click', e => {
+      if (!e.isTrusted || e.detail === 0) return;
+      const onControl = e.target.closest && e.target.closest('a, button, .btn, .filter-btn');
+      spawnRipple(e.clientX, e.clientY, onControl ? 'rgba(37,99,235,.16)' : 'rgba(14,14,13,.07)');
+    }, { passive: true });
   }
 
-  /* ─────────────────────────────────────────────────
-     GLOBAL CLICK RIPPLE
-  ───────────────────────────────────────────────── */
-  function initRipple() {
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('a, button, .btn, .filter-btn')) {
-        spawnRipple(e.clientX, e.clientY, 'rgba(37,99,235,.16)');
-      } else {
-        spawnRipple(e.clientX, e.clientY, 'rgba(14,14,13,.07)');
-      }
-    });
-  }
-
-  /* ─────────────────────────────────────────────────
-     CHAOS MODE — press G×3
-  ───────────────────────────────────────────────── */
-  let gCount = 0, gTimer = null;
+  /* ── CHAOS MODE — tekan G tiga kali ── */
+  let gCount = 0, gTimer = null, chaosActive = false, chaosTimer = null;
   const chaosEls = [];
-  let chaosActive = false;
 
   function triggerChaos() {
-    if (chaosActive) return;
+    if (chaosActive || reduce) return;
     chaosActive = true;
+    sfx('chaos');
 
-    const targets = [
-      ...document.querySelectorAll('.project-card'),
-      ...document.querySelectorAll('.featured-item'),
-      ...document.querySelectorAll('.about-photo'),
-      ...document.querySelectorAll('.hero-stat'),
-    ];
-
+    const targets = document.querySelectorAll('.project-card, .featured-item, .hero-photo, .hero-stat, .hero-chip');
     targets.forEach(el => {
-      const ox = 0, oy = 0;
-      let cx = 0, cy = 0;
+      let cx = 0, cy = 0, crot = 0, alive = true;
       let cvx = (Math.random() - .5) * 14;
       let cvy = (Math.random() - .5) * 10 - 4;
-      let crot = 0, cvrot = (Math.random() - .5) * 12;
-      let alive = true;
+      let cvrot = (Math.random() - .5) * 12;
+      const prevPos = el.style.position, prevZ = el.style.zIndex;
 
-      chaosEls.push({ el, alive, reset: () => {
+      chaosEls.push({ reset() {
         alive = false;
+        el.style.animation = '';
         el.style.transition = 'transform .7s cubic-bezier(.16,1,.3,1)';
-        el.style.transform  = '';
-        setTimeout(() => { el.style.transition = ''; }, 750);
-      }});
+        el.style.transform = '';
+        setTimeout(() => { el.style.transition = ''; el.style.position = prevPos; el.style.zIndex = prevZ; }, 750);
+      } });
 
-      el.style.position = 'relative';
-      el.style.zIndex   = '200';
+      el.style.animation = 'none';
+      if (!el.matches('.hero-chip, .hero-photo')) el.style.position = 'relative';
+      el.style.zIndex = '200';
 
       (function tick() {
         if (!alive) return;
-        cvy  += 0.5;
-        cvx  *= 0.98;
-        cx   += cvx; cy += cvy;
-        crot += cvrot; cvrot *= 0.97;
-
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const r  = el.getBoundingClientRect();
+        cvy += .5; cvx *= .98;
+        cx += cvx; cy += cvy;
+        crot += cvrot; cvrot *= .97;
+        const r = el.getBoundingClientRect();
+        const vw = window.innerWidth, vh = window.innerHeight;
         if (r.bottom > vh) { cvy = -Math.abs(cvy) * .4; cy -= (r.bottom - vh); cvx *= .7; }
-        if (r.right  > vw) { cvx = -Math.abs(cvx) * .5; }
-        if (r.left   < 0)  { cvx =  Math.abs(cvx) * .5; }
-
+        if (r.right > vw)  { cvx = -Math.abs(cvx) * .5; }
+        if (r.left < 0)    { cvx =  Math.abs(cvx) * .5; }
         el.style.transform = `translate(${cx}px,${cy}px) rotate(${crot}deg)`;
         requestAnimationFrame(tick);
       })();
     });
 
-    /* Auto-reset after 5s */
-    setTimeout(resetChaos, 5000);
+    chaosTimer = setTimeout(resetChaos, 5000);
     showToast('🌪 Chaos mode! Tekan Esc untuk kembali');
   }
 
   function resetChaos() {
+    clearTimeout(chaosTimer);
     chaosActive = false;
     chaosEls.forEach(item => item.reset());
     chaosEls.length = 0;
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { resetChaos(); return; }
-    if (e.key.toLowerCase() === 'g') {
+  function setupChaosKeys() {
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { resetChaos(); return; }
+      if (e.key.toLowerCase() !== 'g' || e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target;
+      if (t && t.matches && t.matches('input, textarea, select, [contenteditable="true"]')) return;  // jangan ganggu saat mengetik
       gCount++;
       clearTimeout(gTimer);
       gTimer = setTimeout(() => { gCount = 0; }, 900);
       if (gCount >= 3) { gCount = 0; triggerChaos(); }
-    }
-  });
+    });
+  }
 
-  /* ─────────────────────────────────────────────────
-     HINT TOAST
-  ───────────────────────────────────────────────── */
-  function showToast(msg, duration = 4500) {
+  /* ── TOAST ── */
+  function showToast(msg, duration) {
     const el = document.createElement('div');
     el.className = 'physics-hint';
     el.textContent = msg;
+    el.setAttribute('role', 'status');
     el.style.opacity = '0';
     document.body.appendChild(el);
     requestAnimationFrame(() => { el.style.opacity = '1'; });
     setTimeout(() => {
       el.style.opacity = '0';
       setTimeout(() => el.remove(), 450);
-    }, duration);
+    }, duration || 4500);
   }
 
   /* ─────────────────────────────────────────────────
-     INIT ALL — called after DOM is ready + re-called
-     after dynamic renders via 'portfolioRendered'
+     INIT — aman dipanggil berulang (hanya memproses elemen baru)
   ───────────────────────────────────────────────── */
   function init() {
-    /* —— DRAG: only on actual image elements —— */
-
-    /* Project desktop screenshots */
-    document.querySelectorAll('.fi-desktop img, .card-desktop-thumb img, .d-desktop img').forEach(img => {
-      if (img._physInited) return;
-      img._physInited = true;
-      /* let parent wrapper stay overflow:hidden for clipping */
-      makeDraggable(img, { isProfilePhoto: false });
+    document.querySelectorAll(
+      '.fi-desktop img, .card-desktop-thumb img, .d-desktop img, .hero-photo img'
+    ).forEach(img => {
+      if (img._ctl) return;
+      img._ctl = makeDraggable(img);
     });
-
-    /* Profile photo — must float above navbar */
-    document.querySelectorAll('.about-photo img').forEach(img => {
-      if (img._physInited) return;
-      img._physInited = true;
-      /* Allow the photo to leave its container visually */
-      const container = img.closest('.about-photo');
-      if (container) {
-        container.style.overflow = 'visible';
-        container.style.zIndex   = '99998'; /* just below dragging state */
-      }
-      const wrap = img.closest('.about-photo-wrap');
-      if (wrap) wrap.style.overflow = 'visible';
-      makeDraggable(img, { isProfilePhoto: true });
-    });
-
-    /* —— IMAGE TILT: hover on wrappers tilt the inner img —— */
-    initImageHoverTilt();
-
-    /* —— CARD: only lift, never intercept clicks —— */
-    initCardHover();
-
-    /* —— MAGNETIC BUTTONS —— */
-    if (isFine) initMagneticButtons();
-
-    /* —— BADGE PHYSICS —— */
-    initBadgePhysics();
-
-    /* —— SKILL BARS —— */
-    initSkillBars();
-
-    /* —— FLOATING STATS (homepage only) —— */
-    if (document.querySelector('.hero-stat')) initFloatingStats();
-
-    /* —— RIPPLE —— */
-    initRipple();
+    if (fine) initImageHoverTilt();
   }
 
-  /* Boot */
+  let globalDone = false;
   function boot() {
+    if (!globalDone) {
+      globalDone = true;
+      if (fine) setupMagnetic();
+      setupRipple();
+      setupChaosKeys();
+    }
     init();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 
-  /* Re-init when dynamic content rendered */
   window.addEventListener('portfolioRendered', () => setTimeout(init, 100));
 
-  /* Export */
   window.PhysicsEngine = { spawnRipple, triggerChaos, resetChaos, showToast };
-
 })();

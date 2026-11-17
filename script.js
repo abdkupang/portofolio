@@ -118,13 +118,13 @@ function renderFeatured() {
       <div class="fi-visual">
         <!-- Desktop: full width base -->
         <div class="fi-desktop">
-          <img src="image/${p.folder}/desktop.png" alt="${p.title} desktop" loading="lazy"
+          <img src="image/${p.folder}/desktop.webp" alt="${p.title} desktop" loading="lazy" decoding="async" width="1600" height="900"
                onerror="this.parentElement.style.background='var(--paper-3)'">
         </div>
         <!-- Mobile: floating overlay, only if has mobile image -->
         ${p.hasMobile ? `
         <div class="fi-mobile">
-          <img src="image/${p.folder}/mobile.png" alt="${p.title} mobile" loading="lazy">
+          <img src="image/${p.folder}/mobile.webp" alt="${p.title} mobile" loading="lazy" decoding="async" width="520" height="1155">
         </div>` : ''}
       </div>
       <div class="fi-info">
@@ -168,13 +168,13 @@ function renderAllProjects() {
       <div class="card-visual ${p.hasMobile ? '' : 'no-mobile'}">
         <!-- Desktop: full width base -->
         <div class="card-desktop-thumb">
-          <img src="image/${p.folder}/desktop.png" alt="${p.title}" loading="lazy"
+          <img src="image/${p.folder}/desktop.webp" alt="${p.title}" loading="lazy" decoding="async" width="1600" height="900"
                onerror="this.parentElement.style.background='var(--paper-3)'">
         </div>
         <!-- Mobile: floating overlay bottom-right -->
         ${p.hasMobile ? `
         <div class="card-mobile-thumb">
-          <img src="image/${p.folder}/mobile.png" alt="${p.title} mobile" loading="lazy">
+          <img src="image/${p.folder}/mobile.webp" alt="${p.title} mobile" loading="lazy" decoding="async" width="520" height="1155">
         </div>` : ''}
       </div>
       <div class="card-body">
@@ -221,18 +221,18 @@ function renderDetail(id) {
     ? `<div class="detail-screens">
         <!-- Desktop: full width -->
         <div class="detail-desktop-wrap">
-          <img src="image/${p.folder}/desktop.png" alt="${p.title} — desktop"
+          <img src="image/${p.folder}/desktop.webp" alt="${p.title} — desktop"
                onerror="this.parentElement.style.background='var(--paper-3)'">
         </div>
         <!-- Mobile: floating overlay phone -->
         <div class="detail-mobile-frame">
-          <img src="image/${p.folder}/mobile.png" alt="${p.title} — mobile">
+          <img src="image/${p.folder}/mobile.webp" alt="${p.title} — mobile">
         </div>
         <p class="detail-mobile-caption">Desktop &amp; Mobile Preview</p>
       </div>`
     : `<div class="detail-screens no-mobile">
         <div class="detail-desktop-wrap">
-          <img src="image/${p.folder}/desktop.png" alt="${p.title}"
+          <img src="image/${p.folder}/desktop.webp" alt="${p.title}"
                onerror="this.parentElement.style.background='var(--paper-3)'">
         </div>
         <p class="detail-mobile-caption">Desktop Preview</p>
@@ -315,187 +315,7 @@ const SO = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.4 });
 
-/* ═══════════════════════════════════════════
-   CURSOR GAME — particle trail + magnet + repel
-═══════════════════════════════════════════ */
-function initCursorGame() {
-  if (!window.matchMedia('(pointer: fine)').matches) return;
-
-  const dot    = document.getElementById('cursor-dot');
-  const ring   = document.getElementById('cursor-ring');
-  let canvas   = document.getElementById('cursor-trail-canvas');
-
-  /* Create canvas if not in HTML */
-  if (!canvas) {
-    canvas = document.createElement('canvas');
-    canvas.id = 'cursor-trail-canvas';
-    canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9990;';
-    document.body.appendChild(canvas);
-  }
-
-  const ctx = canvas.getContext('2d');
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-  window.addEventListener('resize', () => {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-
-  let mx = -300, my = -300;          // mouse pos
-  let rx = -300, ry = -300;          // ring pos (lagged)
-  let mode = 'normal';               // 'normal' | 'hover' | 'click'
-  const particles = [];
-
-  /* Mouse tracking */
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.opacity  = '1';
-    ring.style.opacity = '1';
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-    // Spawn particle on move
-    spawnParticle(mx, my);
-  });
-  document.addEventListener('mouseleave', () => {
-    dot.style.opacity = '0';
-    ring.style.opacity = '0';
-  });
-
-  /* Click burst */
-  document.addEventListener('click', () => {
-    for (let i = 0; i < 8; i++) spawnParticle(mx, my, true);
-  });
-
-  /* Hover states */
-  const interactSel = 'a, button, .btn, .filter-btn, .project-card, .featured-item, .skill-item, .nav-link';
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest(interactSel)) {
-      mode = 'hover';
-      dot.style.width        = '22px';
-      dot.style.height       = '22px';
-      dot.style.background   = 'transparent';
-      dot.style.border       = '2px solid var(--ink)';
-      dot.style.borderRadius = '50%';
-      ring.style.width       = '56px';
-      ring.style.height      = '56px';
-      ring.style.borderColor = 'rgba(37,99,235,.35)';
-    }
-  });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest(interactSel)) {
-      mode = 'normal';
-      dot.style.width        = '8px';
-      dot.style.height       = '8px';
-      dot.style.background   = 'var(--ink)';
-      dot.style.border       = 'none';
-      ring.style.width       = '40px';
-      ring.style.height      = '40px';
-      ring.style.borderColor = 'rgba(14,14,13,.2)';
-    }
-  });
-
-  /* Particle class */
-  class Particle {
-    constructor(x, y, burst = false) {
-      this.x  = x + (Math.random() - .5) * (burst ? 24 : 4);
-      this.y  = y + (Math.random() - .5) * (burst ? 24 : 4);
-      this.vx = (Math.random() - .5) * (burst ? 4 : 1.2);
-      this.vy = (Math.random() - .5) * (burst ? 4 : 1.2) - (burst ? 1 : .4);
-      this.life = 1;
-      this.decay = burst ? .04 + Math.random() * .04 : .055 + Math.random() * .03;
-      this.r    = burst ? 2 + Math.random() * 3 : 1.5 + Math.random() * 2;
-      this.color = burst ? `hsl(${220 + Math.random()*40},80%,60%)` : `rgba(14,14,13,`;
-      this.isBurst = burst;
-    }
-    update() {
-      this.x += this.vx; this.y += this.vy;
-      this.vy += .05;     // gravity
-      this.vx *= .96;
-      this.life -= this.decay;
-    }
-    draw(ctx) {
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, this.life) * .6;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = this.isBurst ? this.color : `rgba(14,14,13,${this.life*.4})`;
-      ctx.fill();
-      ctx.restore();
-    }
-  }
-
-  function spawnParticle(x, y, burst = false) {
-    if (particles.length < 120) particles.push(new Particle(x, y, burst));
-  }
-
-  /* Magnetic attraction: nav links pull ring */
-  function getMagneticOffset(el) {
-    const r = el.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top  + r.height / 2;
-    const dx = cx - mx; const dy = cy - my;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    if (dist < 80) {
-      const strength = (80 - dist) / 80;
-      return { ox: dx * strength * .4, oy: dy * strength * .4 };
-    }
-    return { ox: 0, oy: 0 };
-  }
-
-  /* Repel: cards push ring away */
-  function getRepelOffset() {
-    const cards = document.querySelectorAll('.project-card, .featured-item');
-    let totalX = 0, totalY = 0;
-    cards.forEach(card => {
-      const r = card.getBoundingClientRect();
-      const cx = r.left + r.width/2, cy = r.top + r.height/2;
-      const dx = mx - cx, dy = my - cy;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 140 && dist > 0) {
-        const push = (140 - dist) / 140;
-        totalX += (dx / dist) * push * 18;
-        totalY += (dy / dist) * push * 18;
-      }
-    });
-    return { ox: totalX, oy: totalY };
-  }
-
-  /* Main animation loop */
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    /* Update + draw particles */
-    for (let i = particles.length - 1; i >= 0; i--) {
-      particles[i].update();
-      particles[i].draw(ctx);
-      if (particles[i].life <= 0) particles.splice(i, 1);
-    }
-
-    /* Ring smooth follow with magnetic / repel effect */
-    let targetX = mx, targetY = my;
-
-    /* Magnetic pull from nav links */
-    const navLinks = document.querySelectorAll('.nav-link, .nav-cta');
-    navLinks.forEach(el => {
-      const { ox, oy } = getMagneticOffset(el);
-      targetX += ox; targetY += oy;
-    });
-
-    /* Repel from cards */
-    const { ox: repX, oy: repY } = getRepelOffset();
-    targetX += repX; targetY += repY;
-
-    rx += (targetX - rx) * .12;
-    ry += (targetY - ry) * .12;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-
-    requestAnimationFrame(animate);
-  }
-  animate();
-
-  /* Cursor hint removed as requested by user */
-}
+/* Kursor custom → cursor.js (dipakai bersama semua halaman) */
 
 /* ═══════════════════════════════════════════
    SCROLL REVEAL — count up stats
@@ -507,21 +327,18 @@ function initCountUp() {
       if (!e.isIntersecting) return;
       const el  = e.target;
       const raw = el.textContent.trim();
-      const num = parseInt(raw);
+      const num = parseInt(raw, 10);
+      C.unobserve(el);
       if (isNaN(num)) return;
       const suffix = raw.replace(String(num), '');
-      let cur = 0;
-      const dur = 1200;
-      const step = dur / 60;
-      const inc  = num / (dur / step);
-      const timer = setInterval(() => {
-        cur = Math.min(cur + inc, num);
-        el.textContent = Math.round(cur) + suffix;
-        if (cur >= num) clearInterval(timer);
-      }, step);
-      C.unobserve(el);
+      const dur = 1200, t0 = performance.now();
+      (function tick(now) {
+        const k = Math.min(1, (now - t0) / dur);
+        el.textContent = Math.round(num * (1 - Math.pow(1 - k, 3))) + suffix;
+        if (k < 1) requestAnimationFrame(tick);
+      })(t0);
     });
-  }, { threshold: .8 });
+  }, { threshold: .6 });
   nums.forEach(n => C.observe(n));
 }
 
@@ -529,16 +346,18 @@ function initCountUp() {
    HERO PARALLAX
 ═══════════════════════════════════════════ */
 function initParallax() {
-  const h1 = document.querySelector('.hero-h1');
-  const desc = document.querySelector('.hero-desc');
-  if (!h1) return;
+  const copy = document.querySelector('.hero-copy');
+  if (!copy || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(max-width: 768px)').matches) return;     // di HP: tidak perlu
+  let ticking = false;
   window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (y < window.innerHeight) {
-      h1.style.transform   = `translateY(${y * .11}px)`;
-      h1.style.opacity     = `${Math.max(0, 1 - y/window.innerHeight * 1.5)}`;
-      if (desc) desc.style.transform = `translateY(${y * .06}px)`;
-    }
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = window.scrollY;
+      if (y < window.innerHeight) copy.style.transform = `translate3d(0,${(y * .08).toFixed(1)}px,0)`;
+      ticking = false;
+    });
   }, { passive: true });
 }
 
@@ -551,10 +370,16 @@ function initNav() {
   const links  = document.getElementById('navLinks');
   if (!nav) return;
 
+  let navTick = false;
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 24);
-    updateActiveNav();
+    if (navTick) return;
+    navTick = true;
+    requestAnimationFrame(() => {
+      nav.classList.toggle('scrolled', window.scrollY > 24);
+      navTick = false;
+    });
   }, { passive: true });
+  initActiveNav();
 
   toggle?.addEventListener('click', () => {
     const open = links.classList.toggle('open');
@@ -578,15 +403,21 @@ function initNav() {
   if (window.scrollY > 24) nav.classList.add('scrolled');
 }
 
-function updateActiveNav() {
+function initActiveNav() {
   const sections = document.querySelectorAll('section[id]');
-  const offset   = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 64;
-  let cur = '';
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - offset - 80) cur = s.id; });
-  document.querySelectorAll('.nav-link').forEach(l => {
-    const h = l.getAttribute('href') || '';
-    l.classList.toggle('active', h === `#${cur}` || h === `index.html#${cur}`);
-  });
+  if (!sections.length || !('IntersectionObserver' in window)) return;
+  const links = document.querySelectorAll('.nav-link');
+  const IO = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      const id = en.target.id;
+      links.forEach(l => {
+        const h = l.getAttribute('href') || '';
+        l.classList.toggle('active', h === `#${id}` || h === `index.html#${id}`);
+      });
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });          // section yang melewati garis tengah layar
+  sections.forEach(sec => IO.observe(sec));
 }
 
 /* ═══════════════════════════════════════════
@@ -633,15 +464,18 @@ function initFilter() {
 function initContactForm() {
   const form = document.getElementById('contactForm');
   if (!form) return;
+  const sfx = n => { try { window.SFX && window.SFX.play(n); } catch (_) {} };
   form.addEventListener('submit', e => {
     e.preventDefault();
     const btn = form.querySelector('button[type="submit"]');
     const orig = btn.innerHTML;
     btn.innerHTML = 'Mengirim...'; btn.disabled = true;
+    sfx('send');
     setTimeout(() => {
       btn.innerHTML = '✓ Pesan Terkirim!';
       btn.style.background = 'var(--green)';
       form.reset();
+      sfx('success');
       setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.disabled = false; }, 3500);
     }, 1400);
   });
@@ -660,7 +494,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initSmoothScroll();
   initContactForm();
-  initCursorGame();
 
   /* Homepage */
   if (!path.includes('projects.html') && !path.includes('project-detail.html')) {

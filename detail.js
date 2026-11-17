@@ -182,9 +182,9 @@ function renderDetail() {
         <!-- Desktop: full width, rounded, no overflow on parent -->
         <div class="d-desktop">
           <img
-            src="image/${p.folder}/desktop.png"
+            src="image/${p.folder}/desktop.webp"
             alt="${p.title} — tampilan desktop"
-            loading="lazy"
+            loading="lazy" decoding="async"
             onerror="this.parentElement.style.background='#e8e7e2';this.style.display='none'">
         </div>
 
@@ -192,7 +192,7 @@ function renderDetail() {
         <!-- Mobile phone: absolute overlay, bottom-right corner -->
         <div class="d-mobile">
           <img
-            src="image/${p.folder}/mobile.png"
+            src="image/${p.folder}/mobile.webp"
             alt="${p.title} — tampilan mobile"
             loading="lazy"
             onerror="this.parentElement.style.display='none'">
@@ -281,115 +281,7 @@ function initNav() {
   });
 }
 
-/* ── CURSOR GAME ── */
-function initCursor() {
-  if (!window.matchMedia('(pointer:fine)').matches) return;
-
-  const dot  = document.getElementById('cd');
-  const ring = document.getElementById('cr');
-  if (!dot || !ring) return;
-
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  const pts = [];
-
-  // Mouse tracking
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.opacity  = '1';
-    ring.style.opacity = '1';
-    dot.style.left = mx + 'px';
-    dot.style.top  = my + 'px';
-    // spawn trail particle
-    if (pts.length < 80) {
-      pts.push({ x: mx, y: my, life: 1, r: 1.5 + Math.random() * 2 });
-    }
-  });
-
-  document.addEventListener('mouseleave', () => {
-    dot.style.opacity  = '0';
-    ring.style.opacity = '0';
-  });
-
-  // Click burst
-  document.addEventListener('click', () => {
-    for (let i = 0; i < 8; i++) {
-      pts.push({
-        x: mx + (Math.random() - .5) * 20,
-        y: my + (Math.random() - .5) * 20,
-        vx: (Math.random() - .5) * 5,
-        vy: (Math.random() - .5) * 5 - 1.5,
-        life: 1, r: 2 + Math.random() * 3, burst: true,
-      });
-    }
-  });
-
-  // Hover states
-  const sel = 'a, button, .btn, .tag, .d-mobile, .d-desktop, .skill-item';
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest(sel)) {
-      dot.style.width      = '20px';
-      dot.style.height     = '20px';
-      dot.style.background = 'transparent';
-      dot.style.border     = '2px solid var(--ink)';
-      ring.style.width     = '52px';
-      ring.style.height    = '52px';
-    }
-  });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest(sel)) {
-      dot.style.width      = '8px';
-      dot.style.height     = '8px';
-      dot.style.background = 'var(--ink)';
-      dot.style.border     = 'none';
-      ring.style.width     = '38px';
-      ring.style.height    = '38px';
-    }
-  });
-
-  // Particle canvas
-  const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9990;';
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  const resize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Animation loop
-  function loop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = pts.length - 1; i >= 0; i--) {
-      const p = pts[i];
-      p.life -= p.burst ? .042 : .058;
-      if (p.burst) {
-        p.x  += p.vx || 0;
-        p.y  += p.vy || 0;
-        p.vy  = (p.vy || 0) + .08;
-        p.vx *= .95;
-      }
-      if (p.life <= 0) { pts.splice(i, 1); continue; }
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, p.life) * .55;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.burst
-        ? `hsl(${215 + Math.random() * 50}, 75%, 60%)`
-        : 'rgba(14,14,13,.7)';
-      ctx.fill();
-      ctx.restore();
-    }
-
-    // Ring follows mouse with smooth lag
-    rx += (mx - rx) * .12;
-    ry += (my - ry) * .12;
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-
-    requestAnimationFrame(loop);
-  }
-  loop();
-}
+/* Kursor custom → cursor.js */
 
 /* ── BOOT ── */
 // Scripts are loaded at end of <body>, DOM is already ready.
@@ -397,7 +289,6 @@ function initCursor() {
 // (including data.js) has completed before we read PROJECTS.
 function boot() {
   initNav();
-  initCursor();
   renderDetail();
 }
 

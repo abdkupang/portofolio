@@ -7,8 +7,8 @@
   <title>Abdillah Mukhair Ismail — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" integrity="" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="foto.jpg" fetchpriority="high">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -36,69 +36,79 @@
 
 <!-- ── HERO ──────────────────────────────── -->
 <section class="hero" id="hero">
-  <div class="hero-eyebrow">
-    <span class="hero-eyebrow-dot"></span>
-    Available for Freelance &amp; Collaboration
+  <div class="hero-grid">
+
+    <div class="hero-copy">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Available for Freelance &amp; Collaboration
+      </div>
+
+      <h1 class="hero-h1">
+        Full-Stack<br>
+        <em>Web Developer</em>
+      </h1>
+
+      <p class="hero-desc">
+        Abdillah Mukhair Ismail — membangun pengalaman digital modern
+        dengan kode yang bersih, desain yang intuitif, dan bantuan AI.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Lihat Proyek
+        </a>
+        <a href="#contact" class="btn btn-outline">Hubungi Saya</a>
+        <a href="https://github.com/abdkupang" target="_blank" rel="noopener" class="btn btn-ghost" aria-label="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          <span class="btn-label">GitHub</span>
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="stat-num">2+</div>
+          <div class="stat-label">Tahun Exp</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num">22+</div>
+          <div class="stat-label">Proyek</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num">10+</div>
+          <div class="stat-label">Klien</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-photo" id="heroPhoto">
+        <img src="foto.jpg" alt="Foto Abdillah Mukhair Ismail" width="900" height="1200"
+             decoding="async" fetchpriority="high"
+             onerror="this.closest('.hero-photo').classList.add('no-photo')">
+        <div class="photo-badge">
+          <span class="photo-badge-dot"></span>
+          Open to Work
+        </div>
+      </div>
+      <span class="hero-chip chip-1" role="presentation">Laravel</span>
+      <span class="hero-chip chip-2" role="presentation">Next.js</span>
+      <span class="hero-chip chip-3" role="presentation">Vibes Coding ✦</span>
+    </div>
+
   </div>
 
-  <h1 class="hero-h1">
-    Full-Stack<br>
-    <em>Web Developer</em>
-  </h1>
-
-  <p class="hero-desc">
-    Abdillah Mukhair Ismail — membangun pengalaman digital modern
-    dengan kode yang bersih, desain yang intuitif, dan bantuan AI.
-  </p>
-
-  <div class="hero-actions">
-    <a href="#projects" class="btn btn-primary">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      Lihat Proyek
-    </a>
-    <a href="#contact" class="btn btn-outline">Hubungi Saya</a>
-    <a href="https://github.com/abdkupang" target="_blank" class="btn btn-ghost">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
-      GitHub
-    </a>
-  </div>
-
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="stat-num">2+</div>
-      <div class="stat-label">Tahun Exp</div>
-    </div>
-    <div class="hero-stat">
-      <div class="stat-num">22+</div>
-      <div class="stat-label">Proyek</div>
-    </div>
-    <div class="hero-stat">
-      <div class="stat-num">10+</div>
-      <div class="stat-label">Klien</div>
-    </div>
-  </div>
-
-  <div class="hero-scroll">
+  <a href="#about" class="hero-scroll" aria-label="Scroll ke bagian About">
     <div class="scroll-track"><div class="scroll-thumb"></div></div>
     <span class="scroll-label">Scroll</span>
-  </div>
+  </a>
 </section>
 
 <!-- ── ABOUT ──────────────────────────────── -->
 <section class="section" id="about">
   <div class="container">
     <div class="about-grid">
-
-      <div class="about-photo-wrap reveal reveal-left">
-        <div class="about-photo">
-          <img src="foto.jpg" alt="Abdillah Mukhair Ismail"
-               onerror="this.parentElement.innerHTML='<div class=photo-placeholder><svg width=64 height=64 viewBox=\'0 0 24 24\' fill=none stroke=currentColor stroke-width=1><circle cx=12 cy=8 r=4/><path d=\'M4 20c0-4 3.6-7 8-7s8 3 8 7\'/></svg></div>'">
-          <div class="about-badge">
-            <span class="about-badge-dot"></span>
-            Open to Work
-          </div>
-        </div>
-      </div>
 
       <div class="about-content">
         <div class="section-eyebrow reveal">01 — About Me</div>
@@ -119,38 +129,38 @@
           algoritma K-Means untuk FS31 Soccer School.
         </p>
 
-        <div class="about-info reveal" style="--d:.26s">
-          <div class="info-row">
-            <span class="info-key">Lahir</span>
-            <span class="info-val">Kupang, 21 Des 2004</span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Kampus</span>
-            <span class="info-val">Universitas Dipa Makassar</span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Jurusan</span>
-            <span class="info-val">S1 Teknik Informatika</span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Lokasi</span>
-            <span class="info-val">Makassar, Indonesia</span>
-          </div>
-          <div class="info-row">
-            <span class="info-key">Email</span>
-            <span class="info-val">abdkupang46@gmail.com</span>
-          </div>
-        </div>
-
-        <div class="hero-actions" style="margin-top:32px">
+        <div class="about-actions reveal" style="--d:.26s">
           <a href="mailto:abdkupang46@gmail.com" class="btn btn-primary btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Kirim Email
           </a>
-          <a href="https://github.com/abdkupang" target="_blank" class="btn btn-ghost btn-sm">
+          <a href="https://github.com/abdkupang" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
             GitHub
           </a>
+        </div>
+      </div>
+
+      <div class="about-info reveal reveal-right" style="--d:.12s">
+        <div class="info-row">
+          <span class="info-key">Lahir</span>
+          <span class="info-val">Kupang, 21 Des 2004</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Kampus</span>
+          <span class="info-val">Universitas Dipa Makassar</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Jurusan</span>
+          <span class="info-val">S1 Teknik Informatika</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Lokasi</span>
+          <span class="info-val">Makassar, Indonesia</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Email</span>
+          <span class="info-val">abdkupang46@gmail.com</span>
         </div>
       </div>
 
@@ -315,6 +325,8 @@
 <script src="data.js"></script>
 <script src="tech-icons.js"></script>
 <script src="github.js"></script>
+<script src="sfx.js"></script>
+<script src="cursor.js"></script>
 <script src="script.js"></script>
 <script src="physics.js"></script>
 </body>
