@@ -203,7 +203,7 @@
         </p>
 
         <div class="about-actions reveal" style="--d:.26s">
-          <a href="mailto:abdillahmukhairismail@gmail.com" class="btn btn-primary btn-sm">
+          <a href="mailto:abdkupang46@gmail.com" class="btn btn-primary btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Kirim Email
           </a>
@@ -233,7 +233,7 @@
         </div>
         <div class="info-row">
           <span class="info-key">Email</span>
-          <span class="info-val">abdillahmukhairismail@gmail.com</span>
+          <span class="info-val">abdkupang46@gmail.com</span>
         </div>
       </div>
 
@@ -321,13 +321,13 @@
         </p>
 
         <div class="contact-links">
-          <a href="mailto:abdillahmukhairismail@gmail.com" class="contact-link">
+          <a href="mailto:abdkupang46@gmail.com" class="contact-link">
             <span class="contact-link-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </span>
             <span>
               <span class="contact-link-label">Email</span>
-              <span class="contact-link-value">abdillahmukhairismail@gmail.com</span>
+              <span class="contact-link-value">abdkupang46@gmail.com</span>
             </span>
           </a>
           <a href="https://github.com/abdkupang" target="_blank" class="contact-link">
@@ -378,7 +378,7 @@
         </div>
       </div>
 
-      <form class="contact-form reveal reveal-right" id="contactForm">
+      <form class="contact-form reveal reveal-right" id="contactForm" data-wa="6282196481822" data-email="abdillahmukhairismail@gmail.com">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="name">Nama</label>
@@ -397,10 +397,17 @@
           <label class="form-label" for="message">Pesan</label>
           <textarea class="form-control" id="message" rows="5" placeholder="Tuliskan pesan Anda..." required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Kirim Pesan
-        </button>
+        <p class="form-hint">Kirim pesan lewat:</p>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="sendWa">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+            WhatsApp
+          </button>
+          <button type="button" class="btn btn-outline" id="sendMail">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email
+          </button>
+        </div>
       </form>
 
     </div>

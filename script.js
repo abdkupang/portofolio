@@ -465,19 +465,41 @@ function initContactForm() {
   const form = document.getElementById('contactForm');
   if (!form) return;
   const sfx = n => { try { window.SFX && window.SFX.play(n); } catch (_) {} };
+  const val = id => (form.querySelector('#' + id).value || '').trim();
+
+  function compose() {
+    return {
+      nama: val('name'), email: val('email'), subjek: val('subject'), pesan: val('message'),
+    };
+  }
+  function flash(btn, text) {
+    const orig = btn.innerHTML;
+    btn.innerHTML = text;
+    btn.disabled = true;
+    setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2500);
+  }
+
+  // WhatsApp (juga dipakai saat menekan Enter di form)
   form.addEventListener('submit', e => {
     e.preventDefault();
-    const btn = form.querySelector('button[type="submit"]');
-    const orig = btn.innerHTML;
-    btn.innerHTML = 'Mengirim...'; btn.disabled = true;
+    const d = compose();
+    const text = `Halo Abdillah, saya ${d.nama} (${d.email}).\n\n*${d.subjek}*\n\n${d.pesan}`;
+    const url = `https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`;
     sfx('send');
-    setTimeout(() => {
-      btn.innerHTML = '✓ Pesan Terkirim!';
-      btn.style.background = 'var(--green)';
-      form.reset();
-      sfx('success');
-      setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.disabled = false; }, 3500);
-    }, 1400);
+    window.open(url, '_blank', 'noopener');
+    flash(document.getElementById('sendWa'), '✓ Membuka WhatsApp...');
+    setTimeout(() => sfx('success'), 250);
+  });
+
+  // Email (membuka aplikasi email dengan pesan terisi)
+  document.getElementById('sendMail')?.addEventListener('click', () => {
+    if (!form.reportValidity()) return;
+    const d = compose();
+    const body = `Nama: ${d.nama}\nEmail: ${d.email}\n\n${d.pesan}`;
+    sfx('send');
+    window.location.href = `mailto:${form.dataset.email}?subject=${encodeURIComponent(d.subjek)}&body=${encodeURIComponent(body)}`;
+    flash(document.getElementById('sendMail'), '✓ Membuka Email...');
+    setTimeout(() => sfx('success'), 250);
   });
 }
 

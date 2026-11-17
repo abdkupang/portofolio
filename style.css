@@ -959,3 +959,8 @@ input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 /* Footer: link sosmed bertambah → boleh turun baris di layar sempit */
 .footer-links { flex-wrap: wrap; gap: 8px 20px; justify-content: center; }
+
+/* Form kontak: kirim via WhatsApp / Email */
+.form-hint { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: .04em; margin: 4px 0 10px; }
+.form-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-actions .btn { justify-content: center; width: 100%; }
