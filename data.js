@@ -1239,7 +1239,7 @@ const PERSON = {
   subtitle: "AI-Powered Coder",
   bio: "Lulusan S1 Teknik Informatika Universitas Dipa Makassar. Passionate membangun aplikasi web modern dengan memanfaatkan AI sebagai mitra development — pendekatan yang dikenal sebagai Vibes Coding.",
   bio2: "Pengalaman meliputi magang di Komdigi (sistem jadwal & buku tamu digital berbasis Laravel) dan menjadi asisten dosen selama 1 semester. Tugas akhir membangun Sistem Manajemen Kelas Sepak Bola dengan algoritma K-Means untuk FS31 Soccer School.",
-  email: "abdkupang46@gmail.com",
+  email: "abdillahmukhairismail@gmail.com",
   github: "https://github.com/abdkupang",
   location: "Makassar, Indonesia",
   born: "Kupang, 21 Des 2004",

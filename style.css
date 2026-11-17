@@ -956,3 +956,6 @@ input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   75% { transform: rotate(2deg); }
 }
 .chaos-active { animation: chaosWobble .3s ease-in-out infinite; }
+
+/* Footer: link sosmed bertambah → boleh turun baris di layar sempit */
+.footer-links { flex-wrap: wrap; gap: 8px 20px; justify-content: center; }

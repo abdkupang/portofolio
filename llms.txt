@@ -1,0 +1,14 @@
+# Abdillah Mukhair Ismail
+
+> Full-Stack Web Developer & AI-Powered Coder dari Makassar, Indonesia. Lulusan S1 Teknik Informatika, Universitas Dipa Makassar. Membangun aplikasi web dengan Laravel, Next.js, Vue, dan Flask, dibantu AI ("vibes coding"). Terbuka untuk freelance dan kolaborasi.
+
+## Halaman
+- [Beranda / Portfolio](https://abdillahmukhair.my.id/): profil, keahlian, aktivitas GitHub, proyek unggulan, kontak
+- [Semua Proyek](https://abdillahmukhair.my.id/projects.html): daftar lengkap proyek web
+
+## Profil resmi
+- GitHub: https://github.com/abdkupang
+- Instagram: https://www.instagram.com/abdkupang_
+- Facebook: https://www.facebook.com/share/1AYLiiFK7e/
+- WhatsApp: https://wa.me/6282196481822
+- Email: abdillahmukhairismail@gmail.com
