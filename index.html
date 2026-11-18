@@ -8,7 +8,7 @@
   <meta name="keywords" content="Abdillah Mukhair Ismail, Abdillah Mukhair, abdkupang, abdkupang_, full stack web developer Makassar, web developer Makassar, programmer Makassar, freelance web developer Makassar, jasa pembuatan website Makassar, AI-powered coder, vibes coding, Laravel, Next.js, Vue, Flask, Teknik Informatika Universitas Dipa Makassar, portfolio web developer">
   <meta name="author" content="Abdillah Mukhair Ismail">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <meta name="theme-color" content="#f8f7f4">
+  <meta name="theme-color" content="#FFF8EC">
   <link rel="canonical" href="https://abdillahmukhair.my.id/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="id_ID">
@@ -80,11 +80,15 @@
   <title>Abdillah Mukhair Ismail — Full-Stack Web Developer Makassar | Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="foto.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="wipe in-anim" aria-hidden="true"><i></i><i></i><i></i><b>AMI.</b></div>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
 
 <!-- ── CURSOR ─────────────────────────────── -->
 <div id="cursor-dot"></div>
@@ -114,13 +118,15 @@
     <div class="hero-copy">
       <div class="hero-eyebrow">
         <span class="hero-eyebrow-dot"></span>
-        Available for Freelance &amp; Collaboration
+        Terbuka untuk freelance &amp; kolaborasi
       </div>
+      <p class="hero-hi" aria-hidden="true">Halo, aku</p>
 
-      <h1 class="hero-h1">
-        Full-Stack<br>
-        <em>Web Developer</em>
+      <h1 class="hero-h1" id="heroName" aria-label="Abdillah Mukhair — Full-Stack Web Developer">
+        <span class="hero-name" aria-hidden="true">Abdillah</span>
+        <span class="hero-name" aria-hidden="true">Mukhair</span>
       </h1>
+      <p class="hero-role" id="heroRole"><span>Full-Stack Web Developer</span></p>
 
       <p class="hero-desc">
         Abdillah Mukhair Ismail — membangun pengalaman digital modern
@@ -128,55 +134,49 @@
       </p>
 
       <div class="hero-actions">
-        <a href="#projects" class="btn btn-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Lihat Proyek
-        </a>
+        <a href="#projects" class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Lihat Proyek</a>
         <a href="#contact" class="btn btn-outline">Hubungi Saya</a>
-        <a href="https://github.com/abdkupang" target="_blank" rel="noopener" class="btn btn-ghost" aria-label="GitHub">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
-          <span class="btn-label">GitHub</span>
-        </a>
+        <a href="https://github.com/abdkupang" target="_blank" rel="noopener" class="btn btn-ghost" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg><span class="btn-label">GitHub</span></a>
       </div>
 
       <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="stat-num">2+</div>
-          <div class="stat-label">Tahun Exp</div>
-        </div>
-        <div class="hero-stat">
-          <div class="stat-num">22+</div>
-          <div class="stat-label">Proyek</div>
-        </div>
-        <div class="hero-stat">
-          <div class="stat-num">10+</div>
-          <div class="stat-label">Klien</div>
-        </div>
+        <div class="hero-stat"><div class="stat-num">2+</div><div class="stat-label">Tahun Exp</div></div>
+        <div class="hero-stat"><div class="stat-num">22+</div><div class="stat-label">Proyek</div></div>
+        <div class="hero-stat"><div class="stat-num">10+</div><div class="stat-label">Klien</div></div>
       </div>
     </div>
 
-    <div class="hero-visual">
+    <div class="hero-visual" id="heroVisual">
+      <span class="blob blob-a" data-depth="10" aria-hidden="true"></span>
+      <span class="blob blob-b" data-depth="22" aria-hidden="true"></span>
       <div class="hero-photo" id="heroPhoto">
         <img src="foto.jpg" alt="Foto Abdillah Mukhair Ismail" width="900" height="1200"
              decoding="async" fetchpriority="high"
              onerror="this.closest('.hero-photo').classList.add('no-photo')">
-        <div class="photo-badge">
-          <span class="photo-badge-dot"></span>
-          Open to Work
-        </div>
+        <div class="photo-badge"><span class="photo-badge-dot"></span>Open to Work</div>
       </div>
-      <span class="hero-chip chip-1" role="presentation">Laravel</span>
-      <span class="hero-chip chip-2" role="presentation">Next.js</span>
-      <span class="hero-chip chip-3" role="presentation">Vibes Coding ✦</span>
+      <button type="button" class="hero-bubble" id="heroBubble">Ayo bikin sesuatu yang keren!</button>
+      <span class="hero-chip chip-1" data-depth="26" role="presentation">Laravel</span>
+      <span class="hero-chip chip-2" data-depth="34" role="presentation">Next.js</span>
+      <span class="hero-chip chip-3" data-depth="18" role="presentation">Vibes Coding ✦</span>
+      <span class="hero-chip sticker st-star" data-depth="40" role="presentation"><svg viewBox="0 0 24 24" fill="#fff" stroke="#1B1A2E" stroke-width="2.2" stroke-linejoin="round"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"/></svg></span>
+      <span class="hero-chip sticker st-bolt" data-depth="30" role="presentation"><svg viewBox="0 0 24 24" fill="#FFD23F" stroke="#1B1A2E" stroke-width="2.2" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span>
+      <span class="hero-chip sticker st-heart" data-depth="24" role="presentation"><svg viewBox="0 0 24 24" fill="#fff" stroke="#1B1A2E" stroke-width="2.2" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 018-3 4.6 4.6 0 018 3c0 5.8-8 11-8 11z"/></svg></span>
     </div>
 
   </div>
 
   <a href="#about" class="hero-scroll" aria-label="Scroll ke bagian About">
     <div class="scroll-track"><div class="scroll-thumb"></div></div>
-    <span class="scroll-label">Scroll</span>
+    <span class="scroll-label">scroll</span>
   </a>
 </section>
+
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee" id="marquee">
+    <span>PHP</span><span>Laravel</span><span>JavaScript</span><span>TypeScript</span><span>Vue.js</span><span>Next.js</span><span>Node.js</span><span>MySQL</span><span>Vibes Coding</span><span>AI-Assisted</span>
+  </div>
+</div>
 
 <!-- ── ABOUT ──────────────────────────────── -->
 <section class="section" id="about">
@@ -184,7 +184,7 @@
     <div class="about-grid">
 
       <div class="about-content">
-        <div class="section-eyebrow reveal">01 — About Me</div>
+        <div class="section-eyebrow reveal">Tentang aku</div>
         <h2 class="section-title reveal" style="--d:.08s">
           Developer &amp;<br><em>AI-Powered Coder</em>
         </h2>
@@ -203,7 +203,7 @@
         </p>
 
         <div class="about-actions reveal" style="--d:.26s">
-          <a href="mailto:abdkupang46@gmail.com" class="btn btn-primary btn-sm">
+          <a href="mailto:abdillahmukhairismail@gmail.com" class="btn btn-primary btn-sm">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             Kirim Email
           </a>
@@ -233,7 +233,7 @@
         </div>
         <div class="info-row">
           <span class="info-key">Email</span>
-          <span class="info-val">abdkupang46@gmail.com</span>
+          <span class="info-val">abdillahmukhairismail@gmail.com</span>
         </div>
       </div>
 
@@ -244,7 +244,7 @@
 <!-- ── GITHUB CONTRIBUTIONS ─────────────── -->
 <section class="section section-gh" id="github">
   <div class="container">
-    <div class="section-eyebrow reveal">02.5 — GitHub Activity</div>
+    <div class="section-eyebrow reveal">Aktivitas</div>
     <h2 class="section-title reveal" style="--d:.08s">Kontribusi<em> GitHub</em></h2>
     <div class="gh-contrib-wrap reveal" style="--d:.14s">
       <div class="gh-contrib-header">
@@ -278,7 +278,7 @@
 <!-- ── SKILLS ─────────────────────────────── -->
 <section class="section section-alt" id="skills">
   <div class="container">
-    <div class="section-eyebrow reveal">03 — Skills</div>
+    <div class="section-eyebrow reveal">Skill</div>
     <h2 class="section-title reveal" style="--d:.08s">Keahlian<em> Teknis</em></h2>
 
     <div class="skills-grid" id="skillsGrid">
@@ -292,7 +292,7 @@
   <div class="container">
     <div class="projects-intro">
       <div>
-        <div class="section-eyebrow reveal">04 — Projects</div>
+        <div class="section-eyebrow reveal">Karya</div>
         <h2 class="section-title reveal" style="--d:.08s">Proyek<em> Terbaru</em></h2>
       </div>
       <a href="projects.html" class="link-view-all reveal" style="--d:.12s">
@@ -310,7 +310,7 @@
 <!-- ── CONTACT ───────────────────────────── -->
 <section class="section section-alt" id="contact">
   <div class="container">
-    <div class="section-eyebrow reveal">05 — Contact</div>
+    <div class="section-eyebrow reveal">Ngobrol yuk</div>
     <div class="contact-grid">
 
       <div class="reveal reveal-left">
@@ -321,13 +321,13 @@
         </p>
 
         <div class="contact-links">
-          <a href="mailto:abdkupang46@gmail.com" class="contact-link">
+          <a href="mailto:abdillahmukhairismail@gmail.com" class="contact-link">
             <span class="contact-link-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </span>
             <span>
               <span class="contact-link-label">Email</span>
-              <span class="contact-link-value">abdkupang46@gmail.com</span>
+              <span class="contact-link-value">abdillahmukhairismail@gmail.com</span>
             </span>
           </a>
           <a href="https://github.com/abdkupang" target="_blank" class="contact-link">
@@ -439,5 +439,6 @@
 <script src="cursor.js"></script>
 <script src="script.js"></script>
 <script src="physics.js"></script>
+<script src="fx.js"></script>
 </body>
 </html>

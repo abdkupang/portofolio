@@ -167,6 +167,17 @@
                  tone({ freq: 200, end: 140, type: 'sawtooth', dur: .2, vol: .07, at: .12 }); },
     chaos()    { noise({ dur: .6, vol: .12, f0: 900, f1: 120, q: .7 });
                  tone({ freq: 400, end: 70, type: 'sawtooth', dur: .5, vol: .1 }); },
+    letter(i)  { const P = [392, 440, 494, 587, 659, 784, 880, 988];
+                 const f = P[(i | 0) % P.length] * ((i | 0) >= P.length ? 1 : 1);
+                 tone({ freq: f, dur: .18, vol: .13, attack: .004 });
+                 tone({ freq: f * 2, dur: .09, vol: .04 }); },
+    pop()      { tone({ freq: 300, end: 900, type: 'sine', dur: .11, vol: .16 });
+                 noise({ dur: .04, vol: .05, f0: 2600, ft: 'highpass' }); },
+    bubble()   { tone({ freq: 520, end: 760, type: 'triangle', dur: .08, vol: .13 });
+                 tone({ freq: 760, end: 520, type: 'triangle', dur: .1, vol: .1, at: .07 }); },
+    whoosh()   { noise({ dur: .42, vol: .09, f0: 300, f1: 3400, q: .9 });
+                 tone({ freq: 220, end: 880, type: 'triangle', dur: .35, vol: .07 }); },
+    section()  { tone({ freq: 880, end: 1175, dur: .07, vol: .05, attack: .004 }); },
     on()       { tone({ freq: 520, end: 780, dur: .09, vol: .13 });
                  tone({ freq: 780, end: 1040, dur: .11, vol: .1, at: .06 }); },
     off()      { tone({ freq: 700, end: 400, dur: .1, vol: .12 }); },
@@ -174,7 +185,7 @@
 
   /* ── Pemutar (throttle per nama supaya tidak numpuk) ── */
   const GAP = { hover: 40, hoverCard: 90, hoverBlip: 50, cell: 28, key: 16, keyBack: 20,
-                scrollKey: 70, focus: 40, focusField: 60, error: 250, tap: 60 };
+                scrollKey: 70, letter: 55, section: 400, whoosh: 300, pop: 40, bubble: 60, focus: 40, focusField: 60, error: 250, tap: 60 };
   const last = Object.create(null);
 
   function play(name, arg) {
@@ -201,13 +212,18 @@
   /* ── Klasifikasi elemen interaktif ── */
   const SEL = 'a[href], button, [role="button"], summary, select, input, textarea, label[for], ' +
               '.project-card, .featured-item, .skill-item, .tech-badge, .hero-stat, .hero-chip, ' +
-              '.hero-photo, .d-desktop, .fi-desktop, .card-desktop-thumb, .contact-link, .gh-cell, .info-row';
+              '.hero-photo, .d-desktop, .fi-desktop, .card-desktop-thumb, .contact-link, .gh-cell, .info-row, ' +
+              '.ch, .hero-bubble, .marquee span, .hero-chip, .d-mobile, .fi-mobile, .card-mobile-thumb';
 
   function closestInteractive(t) {
     return t && t.closest ? t.closest(SEL) : null;
   }
   function kind(el) {
     if (el.closest('#sfxToggle') || el.matches('.nav-toggle')) return null;   // punya suara sendiri
+    if (el.matches('.ch')) return null;                                      // fx.js memainkan nada per huruf
+    if (el.matches('.hero-bubble')) return 'bubble';
+    if (el.matches('.hero-chip')) return 'pop';
+    if (el.matches('.marquee span, .d-mobile, .fi-mobile, .card-mobile-thumb')) return 'blip';
     if (el.matches('.gh-cell')) return 'cell';
     if (el.matches('.nav-link, .nav-logo, .footer-links a, .back-btn, .page-back, .link-view-all')) return 'nav';
     if (el.matches('.btn-primary, .nav-cta, .btn-dark, [type="submit"]')) return 'primary';
@@ -332,24 +348,23 @@
   const ICON_OFF = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>';
 
   const CSS = `
-  .sfx-toggle{position:fixed;right:20px;bottom:20px;z-index:9500;width:44px;height:44px;border-radius:50%;
+  .sfx-toggle{position:fixed;right:20px;bottom:20px;z-index:9500;width:48px;height:48px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;cursor:pointer;
-    background:rgba(248,247,244,.92);color:var(--ink,#0e0e0d);
-    border:1px solid var(--line-2,#d0cfc9);box-shadow:0 6px 20px rgba(0,0,0,.12);
-    transition:transform .2s cubic-bezier(.16,1,.3,1),background .2s,color .2s,box-shadow .2s;
+    background:var(--lime,#C8F560);color:var(--ink,#1B1A2E);
+    border:2.5px solid var(--ink,#1B1A2E);box-shadow:3px 3px 0 var(--ink,#1B1A2E);
+    transition:transform .15s cubic-bezier(.16,1,.3,1),box-shadow .15s,background .2s;
     -webkit-tap-highlight-color:transparent}
-  .sfx-toggle:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.16)}
-  .sfx-toggle:active{transform:scale(.92)}
-  .sfx-toggle:focus-visible{outline:2px solid var(--accent,#2563eb);outline-offset:3px}
-  .sfx-toggle[aria-pressed="false"]{color:var(--ink-3,#7a7a74);background:rgba(241,240,236,.92)}
-  .sfx-toggle::after{content:'';position:absolute;inset:-5px;border-radius:50%;
-    border:1.5px solid var(--accent,#2563eb);opacity:0;pointer-events:none}
-  html:not(.sfx-unlocked) .sfx-toggle[aria-pressed="true"]::after{animation:sfxPulse 2.2s ease-out 1.2s 3}
-  @keyframes sfxPulse{0%{opacity:.55;transform:scale(.9)}100%{opacity:0;transform:scale(1.45)}}
-  @media (max-width:768px){
-    .sfx-toggle{right:66px;bottom:auto;top:calc((var(--nav-h,56px) - 36px) / 2);width:36px;height:36px;
-      background:rgba(248,247,244,.7)}
-    .sfx-toggle svg{width:16px;height:16px}
+  .sfx-toggle:hover{transform:translate(-1px,-2px) rotate(-6deg);box-shadow:5px 5px 0 var(--ink,#1B1A2E)}
+  .sfx-toggle:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink,#1B1A2E)}
+  .sfx-toggle:focus-visible{outline:3px solid var(--purple,#8B6CFF);outline-offset:3px}
+  .sfx-toggle[aria-pressed="false"]{background:var(--paper-3,#F3E9D6);color:var(--ink-3,#66647F)}
+  .sfx-toggle::after{content:'';position:absolute;inset:-6px;border-radius:50%;
+    border:2.5px solid var(--coral,#FF6B5B);opacity:0;pointer-events:none}
+  html:not(.sfx-unlocked) .sfx-toggle[aria-pressed="true"]::after{animation:sfxPulse 2.2s ease-out 1.2s 4}
+  @keyframes sfxPulse{0%{opacity:.8;transform:scale(.9)}100%{opacity:0;transform:scale(1.5)}}
+  @media (max-width:860px){
+    .sfx-toggle{right:72px;bottom:auto;top:23px;width:40px;height:40px;box-shadow:2px 2px 0 var(--ink,#1B1A2E)}
+    .sfx-toggle svg{width:17px;height:17px}
   }
   @media (prefers-reduced-motion:reduce){html:not(.sfx-unlocked) .sfx-toggle::after{animation:none}}`;
 
