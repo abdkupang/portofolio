@@ -75,7 +75,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible, summary:focus-v
 /* ═════════ NAV — pil melayang ═════════ */
 .nav {
   position: fixed; top: 14px; left: 0; right: 0; z-index: 500; height: 58px;
-  pointer-events: none;
+  pointer-events: none; padding: 0 14px;
 }
 .nav-inner {
   pointer-events: auto; position: relative;
