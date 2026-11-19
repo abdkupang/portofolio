@@ -82,6 +82,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="foto.jpg" fetchpriority="high">
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="logo-192.png">
+  <link rel="apple-touch-icon" href="logo-192.png">
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -97,7 +100,7 @@
 <!-- ── NAV ───────────────────────────────── -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">AMI<span class="logo-dot">.</span></a>
+    <a href="index.html" class="nav-logo" aria-label="Abdillah Mukhair — beranda"><img class="logo-mark" src="logo.svg" alt="" width="34" height="36">AMI<span class="logo-dot">.</span></a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#about"    class="nav-link">About</a></li>
       <li><a href="#skills"   class="nav-link">Skills</a></li>
@@ -418,7 +421,7 @@
 <footer class="footer">
   <div class="container">
     <div class="footer-inner">
-      <a href="index.html" class="nav-logo">AMI<span class="logo-dot">.</span></a>
+      <a href="index.html" class="nav-logo" aria-label="Abdillah Mukhair — beranda"><img class="logo-mark" src="logo.svg" alt="" width="34" height="36">AMI<span class="logo-dot">.</span></a>
       <p class="footer-copy">© 2025 Abdillah Mukhair Ismail. All rights reserved.</p>
       <div class="footer-links">
         <a href="https://github.com/abdkupang" target="_blank" rel="noopener">GitHub</a>
@@ -440,5 +443,6 @@
 <script src="script.js"></script>
 <script src="physics.js"></script>
 <script src="fx.js"></script>
+<script src="critter.js"></script>
 </body>
 </html>

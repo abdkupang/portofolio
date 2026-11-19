@@ -306,3 +306,90 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible, summary:focus-v
 
 /* gelombang bawah bagian kontak menyambung ke footer gelap */
 #contact.section-alt::after { background: var(--ink); }
+
+/* ═════════ Logo ═════════ */
+.nav-logo { align-items: center; }
+.logo-mark { width: 34px; height: 36px; margin-right: 8px; flex: none; transition: transform .4s var(--spring); }
+.nav-logo:hover .logo-mark { transform: rotate(-12deg) scale(1.12); }
+.footer .logo-mark { filter: drop-shadow(0 0 0 transparent); }
+
+/* ═════════ Ami — asisten kecil ═════════ */
+.ami {
+  position: fixed; left: 0; top: 0; z-index: 8000; width: 60px; height: 68px;
+  transform: translate3d(-200px, -200px, 0); will-change: transform; touch-action: manipulation;
+  cursor: grab; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; outline: none;
+}
+.ami:focus-visible .ami-body { outline: 3px solid var(--purple); outline-offset: 4px; border-radius: 20px; }
+.ami.held { cursor: grabbing; z-index: 8100; }
+.ami-flip { width: 100%; height: 100%; transform: scaleX(var(--dir, 1)); transition: transform .18s var(--ease); }
+.ami-body { width: 100%; height: 100%; transform-origin: 50% 90%; }
+.ami-body svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.ami-shadow { position: absolute; left: 12px; right: 12px; bottom: -4px; height: 8px; border-radius: 50%; background: rgba(27, 26, 46, .22); transition: transform .3s, opacity .3s; }
+.ami.flying .ami-shadow, .ami.held .ami-shadow { transform: scale(.55); opacity: .5; }
+
+.ami-prop { transform-origin: 32px 7px; animation: amiProp .7s linear infinite; }
+.ami.flying .ami-prop, .ami.held .ami-prop { animation-duration: .12s; }
+.ami.sleeping .ami-prop { animation-play-state: paused; }
+@keyframes amiProp { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.18); } }
+.ami-eyes { transform-origin: 32px 33px; animation: amiBlink 4.6s infinite; }
+@keyframes amiBlink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+.ami-pupil { transition: transform .12s linear; }
+.ami .m-o, .ami .m-x, .ami .m-sad, .ami .eyes-x, .ami .ami-tool, .ami .ami-z { display: none; }
+.ami.o .m-smile, .ami.dizzy .m-smile, .ami.sleeping .m-smile { display: none; }
+.ami.o .m-o { display: inline; }
+.ami.dizzy .m-x { display: inline; }
+.ami.dizzy .ami-eyes { display: none; } .ami.dizzy .eyes-x { display: inline; }
+.ami.sleeping .ami-eyes { animation: none; transform: scaleY(.12); }
+.ami.sleeping .ami-z { display: block; }
+.ami.tool-wrench .t-wrench, .ami.tool-broom .t-broom { display: inline; }
+.ami.tool-wrench .ami-tool, .ami.tool-broom .ami-tool { display: block; }
+.ami-arm-r { transform-origin: 56px 42px; }
+.ami.waving .ami-arm-r { animation: amiWave .5s ease-in-out 3; }
+@keyframes amiWave { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-55deg); } }
+.ami.walking .ami-body { animation: amiWalk .34s ease-in-out infinite; }
+.ami.walking .ami-foot-l { animation: amiStep .34s ease-in-out infinite; }
+.ami.walking .ami-foot-r { animation: amiStep .34s ease-in-out infinite reverse; }
+@keyframes amiWalk { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
+@keyframes amiStep { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.ami.flying .ami-body { animation: amiFloat .6s ease-in-out infinite; }
+@keyframes amiFloat { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-5px) rotate(3deg); } }
+.ami.squish .ami-body { animation: amiSquish .5s var(--spring); }
+@keyframes amiSquish { 0% { transform: scale(1); } 25% { transform: scale(1.25, .7); } 55% { transform: scale(.85, 1.2) translateY(-8px); } 100% { transform: scale(1); } }
+.ami.dizzy .ami-body { animation: amiDizzy .5s ease-in-out infinite; }
+@keyframes amiDizzy { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+.ami.happy .ami-body { animation: amiHappy .55s var(--spring); }
+@keyframes amiHappy { 0% { transform: translateY(0); } 40% { transform: translateY(-14px) rotate(-6deg); } 100% { transform: translateY(0); } }
+.ami-z { position: absolute; right: -4px; top: -10px; font-family: var(--font-hand); font-size: 22px; font-weight: 700; animation: amiZ 1.8s ease-in-out infinite; }
+@keyframes amiZ { 0% { opacity: 0; transform: translate(0, 6px); } 50% { opacity: 1; } 100% { opacity: 0; transform: translate(8px, -12px); } }
+.ami.dizzy::after { content: '✦ ✦'; position: absolute; left: 6px; top: -14px; color: var(--coral); font-size: 14px; letter-spacing: 6px; animation: spin 1s linear infinite; }
+
+.ami-say {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; width: max-content; max-width: 190px; padding: 7px 13px 9px;
+  background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 16px 16px 16px 4px; box-shadow: 3px 3px 0 var(--ink);
+  font-family: var(--font-hand); font-weight: 700; font-size: 19px; line-height: 1.05; color: var(--ink); pointer-events: none;
+  opacity: 0; transform: translate(var(--sx, -20%), 8px) scale(.8); transform-origin: 0 100%;
+  transition: opacity .2s, transform .35s var(--spring);
+}
+.ami-say.show { opacity: 1; transform: translate(var(--sx, -20%), 0) scale(1); }
+
+/* item yang sedang diseret / jatuh (salinan, tidak terpotong kartu) */
+.ami-ghost { position: absolute; left: 0; top: 0; z-index: 7000; margin: 0 !important; pointer-events: auto; touch-action: none; cursor: grab;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; will-change: transform; }
+.ami-ghost, .ami-ghost * { transition: none !important; animation: none !important; }
+.ami-ghost.held { cursor: grabbing; z-index: 7100; filter: drop-shadow(0 10px 0 rgba(27, 26, 46, .25)); }
+.ami-ghost.carried { pointer-events: none; }
+.ami-ghost.mess { filter: drop-shadow(0 4px 0 rgba(27, 26, 46, .2)); }
+.ami-drag-ok { cursor: grab; }
+.skill-track { touch-action: none; cursor: ew-resize; }
+.gh-cell.painted { box-shadow: 0 0 0 2px var(--ink); }
+.ami-wiggle { animation: amiWiggle .5s var(--spring); }
+@keyframes amiWiggle { 0% { transform: scale(1) rotate(0); } 30% { transform: scale(1.18) rotate(-5deg); } 60% { transform: scale(.95) rotate(3deg); } 100% { transform: none; } }
+body:has(.nav-links.open) .ami { opacity: 0; pointer-events: none; }
+
+@media (max-width: 768px) {
+  .ami { width: 52px; height: 59px; }
+  .ami-say { font-size: 17px; max-width: 160px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ami-prop, .ami-eyes, .ami.walking .ami-body, .ami.flying .ami-body { animation: none !important; }
+}

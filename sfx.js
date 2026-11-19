@@ -177,6 +177,16 @@
                  tone({ freq: 760, end: 520, type: 'triangle', dur: .1, vol: .1, at: .07 }); },
     whoosh()   { noise({ dur: .42, vol: .09, f0: 300, f1: 3400, q: .9 });
                  tone({ freq: 220, end: 880, type: 'triangle', dur: .35, vol: .07 }); },
+    squeak()   { tone({ freq: 700, end: 1250, type: 'square', dur: .07, vol: .06 });
+                 tone({ freq: 1250, end: 900, type: 'square', dur: .08, vol: .05, at: .06 }); },
+    fix()      { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => tone({ freq: f, type: 'triangle', dur: .13, vol: .12, at: i * .07 })); },
+    sweep()    { noise({ dur: .26, vol: .07, f0: 2400, f1: 900, q: .8 }); },
+    dizzy()    { tone({ freq: 520, end: 240, type: 'sawtooth', dur: .35, vol: .06 });
+                 tone({ freq: 430, end: 200, type: 'sawtooth', dur: .35, vol: .05, at: .2 }); },
+    paint(i)   { tone({ freq: 392 * Math.pow(1.1225, (i | 0) % 10), type: 'sine', dur: .1, vol: .1 }); },
+    scrub(v)   { tone({ freq: 300 + (v | 0) * 7, type: 'triangle', dur: .045, vol: .06 }); },
+    thud()     { tone({ freq: 130, end: 60, dur: .13, vol: .2 });
+                 noise({ dur: .05, vol: .05, f0: 500, q: 1 }); },
     section()  { tone({ freq: 880, end: 1175, dur: .07, vol: .05, attack: .004 }); },
     on()       { tone({ freq: 520, end: 780, dur: .09, vol: .13 });
                  tone({ freq: 780, end: 1040, dur: .11, vol: .1, at: .06 }); },
@@ -185,7 +195,7 @@
 
   /* ── Pemutar (throttle per nama supaya tidak numpuk) ── */
   const GAP = { hover: 40, hoverCard: 90, hoverBlip: 50, cell: 28, key: 16, keyBack: 20,
-                scrollKey: 70, letter: 55, section: 400, whoosh: 300, pop: 40, bubble: 60, focus: 40, focusField: 60, error: 250, tap: 60 };
+                scrollKey: 70, letter: 55, squeak: 90, fix: 200, sweep: 120, dizzy: 400, paint: 25, scrub: 35, thud: 70, section: 400, whoosh: 300, pop: 40, bubble: 60, focus: 40, focusField: 60, error: 250, tap: 60 };
   const last = Object.create(null);
 
   function play(name, arg) {
@@ -213,14 +223,14 @@
   const SEL = 'a[href], button, [role="button"], summary, select, input, textarea, label[for], ' +
               '.project-card, .featured-item, .skill-item, .tech-badge, .hero-stat, .hero-chip, ' +
               '.hero-photo, .d-desktop, .fi-desktop, .card-desktop-thumb, .contact-link, .gh-cell, .info-row, ' +
-              '.ch, .hero-bubble, .marquee span, .hero-chip, .d-mobile, .fi-mobile, .card-mobile-thumb';
+              '.ami, .ami-ghost, .ch, .hero-bubble, .marquee span, .hero-chip, .d-mobile, .fi-mobile, .card-mobile-thumb';
 
   function closestInteractive(t) {
     return t && t.closest ? t.closest(SEL) : null;
   }
   function kind(el) {
     if (el.closest('#sfxToggle') || el.matches('.nav-toggle')) return null;   // punya suara sendiri
-    if (el.matches('.ch')) return null;                                      // fx.js memainkan nada per huruf
+    if (el.matches('.ami, .ami-ghost, .ch')) return null;                                      // fx.js memainkan nada per huruf
     if (el.matches('.hero-bubble')) return 'bubble';
     if (el.matches('.hero-chip')) return 'pop';
     if (el.matches('.marquee span, .d-mobile, .fi-mobile, .card-mobile-thumb')) return 'blip';
