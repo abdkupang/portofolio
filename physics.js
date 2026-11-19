@@ -383,7 +383,7 @@
   ───────────────────────────────────────────────── */
   function init() {
     document.querySelectorAll(
-      '.fi-desktop img, .card-desktop-thumb img, .d-desktop img, .hero-photo img'
+      '.fi-desktop img, .card-desktop-thumb img, .d-desktop img'
     ).forEach(img => {
       if (img._ctl) return;
       img._ctl = makeDraggable(img);

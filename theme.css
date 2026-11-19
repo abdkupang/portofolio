@@ -393,3 +393,34 @@ body:has(.nav-links.open) .ami { opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) {
   .ami-prop, .ami-eyes, .ami.walking .ami-body, .ami.flying .ami-body { animation: none !important; }
 }
+
+/* ── Obrolan dengan Ami ── */
+.ami-chat { position: fixed; z-index: 8200; right: 14px; bottom: 14px; width: min(340px, calc(100vw - 28px)); background: var(--paper); border: var(--bw) solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); display: flex; flex-direction: column; overflow: hidden; animation: chatIn .35s var(--spring); }
+.ami-chat[hidden] { display: none; }
+@keyframes chatIn { from { transform: translateY(20px) scale(.95); opacity: 0; } }
+.ami-chat-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; background: var(--yellow); border-bottom: var(--bw) solid var(--ink); font-size: 14px; }
+.ami-chat-x { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); font-size: 20px; line-height: 1; font-weight: 800; cursor: pointer; }
+.ami-chat-log { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; max-height: 120px; overflow-y: auto; font-size: 13.5px; font-weight: 600; }
+.ami-chat-log .l-ami, .ami-chat-log .l-me { padding: 6px 11px; border-radius: 14px; border: 2px solid var(--ink); max-width: 88%; line-height: 1.35; }
+.ami-chat-log .l-ami { background: var(--cream); align-self: flex-start; border-bottom-left-radius: 4px; }
+.ami-chat-log .l-me { background: var(--sky); align-self: flex-end; border-bottom-right-radius: 4px; }
+.ami-chat-chips { display: flex; gap: 6px; padding: 0 12px 8px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.ami-chat-chips::-webkit-scrollbar { display: none; }
+.ami-chat-chips button { flex: none; padding: 5px 11px; border-radius: 999px; border: 2px solid var(--ink); background: var(--paper); font: 700 12.5px var(--font-body); cursor: pointer; white-space: nowrap; }
+.ami-chat-chips button:active { background: var(--lime); }
+.ami-chat-form { display: flex; gap: 6px; padding: 0 12px 12px; }
+.ami-chat-form input { flex: 1; min-width: 0; padding: 8px 12px; border: 2px solid var(--ink); border-radius: 999px; font: 600 16px var(--font-body); background: var(--cream); }
+.ami-chat-form button { padding: 8px 14px; border: 2px solid var(--ink); border-radius: 999px; background: var(--coral); color: #fff; font: 800 13px var(--font-body); cursor: pointer; }
+@media (max-width: 860px) { .ami-chat { right: 8px; bottom: 8px; width: calc(100vw - 16px); } }
+.ami-say { max-width: min(220px, 60vw); width: max-content; }
+
+/* state baru Ami */
+.ami.dance .ami-body { animation: amiDance .42s ease-in-out infinite; }
+@keyframes amiDance { 0%,100% { rotate: -10deg; translate: -4px 0; } 50% { rotate: 10deg; translate: 4px -10px; } }
+.ami.spin .ami-body { animation: amiSpin 1s ease-in-out; }
+@keyframes amiSpin { to { rotate: 720deg; } }
+.ami.perched .ami-shadow { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .ami.dance .ami-body, .ami.spin .ami-body, .ami-chat { animation: none !important; } }
+body:has(.ami-chat:not([hidden])) .physics-hint { display: none; }
+@media (max-width: 860px) { .ami-chat-log { max-height: 84px; } }
+.ami-say.below { bottom: auto; top: calc(100% + 8px); transform-origin: 0 0; border-radius: 4px 16px 16px 16px; }
