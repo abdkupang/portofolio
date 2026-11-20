@@ -428,3 +428,16 @@ body:has(.ami-chat:not([hidden])) .physics-hint { display: none; }
 .ami.tumble .ami-body { transform-origin: 50% 50%; }
 .ami.perched .ami-shadow { opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .ami.dance .ami-body, .ami.spin .ami-body, .ami-chat { animation: none !important; } }
+
+/* wajah takut saat diangkat / dilempar */
+.ami .m-brow, .ami .ami-sweat { display: none; }
+.ami.scared .m-brow, .ami.scared .ami-sweat { display: inline; }
+.ami.scared .m-smile, .ami.scared .m-o { display: none; }
+.ami.scared .m-x { display: inline; }
+.ami.scared .ami-eyes { animation: none; transform: scale(1.18); }
+.ami.scared .ami-pupil circle { r: 1.8px; }
+.ami.scared .ami-body { animation: amiShake .09s linear infinite; }
+@keyframes amiShake { 0%,100% { translate: -1.6px 0; } 50% { translate: 1.6px 0; } }
+.ami.scared .ami-sweat { animation: amiSweat .5s ease-in infinite; }
+@keyframes amiSweat { from { translate: 0 -2px; opacity: 1; } to { translate: 2px 9px; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ami.scared .ami-body, .ami.scared .ami-sweat { animation: none !important; } }

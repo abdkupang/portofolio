@@ -101,6 +101,8 @@
     <ellipse cx="14" cy="45" rx="4" ry="2.8" fill="#FF6B5B" opacity=".65"/><ellipse cx="50" cy="45" rx="4" ry="2.8" fill="#FF6B5B" opacity=".65"/>
     <path class="m-smile" d="M25 45Q32 53 39 45" fill="none" stroke="#1B1A2E" stroke-width="3" stroke-linecap="round"/>
     <ellipse class="m-o" cx="32" cy="48" rx="3.6" ry="4.4" fill="#1B1A2E"/>
+    <g class="m-brow" fill="none" stroke="#1B1A2E" stroke-width="2.8" stroke-linecap="round"><path d="M16 24l11 4M48 24l-11 4"/></g>
+    <path class="ami-sweat" d="M55 17q4 6 0 9q-4-3 0-9z" fill="#A7D8FF" stroke="#1B1A2E" stroke-width="1.8" stroke-linejoin="round"/>
     <path class="m-x" d="M24 48q4 -5 8 0t8 0" fill="none" stroke="#1B1A2E" stroke-width="2.8" stroke-linecap="round"/>
   </svg>`;
   const ami = document.createElement('div');
@@ -604,7 +606,7 @@
       drag.g.el.classList.add('held');
       try { drag.g.el.setPointerCapture(drag.id); } catch (_) {}
     } else {                                           // Ami diangkat
-      stopFlight(); A.held = true; unperch(); sync(); ami.classList.add('held', 'o');
+      stopFlight(); A.held = true; unperch(); sync(); ami.classList.add('held', 'scared');
       ami.classList.remove('flying', 'walking');
       drag.offX = sz.w / 2; drag.offY = sz.h * .4;
       try { ami.setPointerCapture(drag.id); } catch (_) {}
@@ -674,7 +676,7 @@
   }
   function throwAmi(v, onLand) {
     ami.classList.remove('held', 'o', 'walking');
-    ami.classList.add('flying', 'tumble');
+    ami.classList.add('flying', 'tumble', 'scared');
     unperch();
     A.held = true;
     let vx = clamp(v.vx * 1.2, -3.6, 3.6), vy = clamp(v.vy * 1.2, -3.6, 3.6);
@@ -685,7 +687,7 @@
     const G = .0024, t0 = performance.now();
     let last = t0, hits = 0, wallAt = 0;
     const done = () => {
-      ami.classList.remove('flying', 'tumble');
+      ami.classList.remove('flying', 'tumble', 'scared');
       rot = ((rot % 360) + 540) % 360 - 180;
       bodyEl.style.transition = 'rotate .3s var(--spring)';
       bodyEl.style.rotate = '0deg';
@@ -981,6 +983,7 @@
 
   /* ───────── Masuk panggung ───────── */
   (async function intro() {
+    try { await window.GateReady; } catch (_) {}
     await wait(reduce ? 200 : 1500);
     await move(16, ground());
     ami.classList.add('waving'); setTimeout(() => ami.classList.remove('waving'), 1700);

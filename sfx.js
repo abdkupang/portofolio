@@ -209,11 +209,15 @@
                  noise({ dur: .04, vol: .05 * v, f0: 900, q: 1.2 }); },
     scatter()  { noise({ dur: .35, vol: .12, f0: 1800, f1: 300, q: .6 });
                  for (let i = 0; i < 5; i++) tone({ freq: 420 + i * 130 + Math.random() * 60, end: 200, type: 'triangle', dur: .12, vol: .08, at: i * .045 }); },
-    welcome()  { [392, 494, 587, 784, 988].forEach((f, i) => {
+    welcome()  { noise({ dur: .55, vol: .11, f0: 250, f1: 3600, q: .9 });
+                 tone({ freq: 200, end: 800, type: 'triangle', dur: .45, vol: .07 });
+                 [392, 494, 587, 784, 988].forEach((f, i) => {
                    tone({ freq: f, dur: .5, vol: .1, at: i * .09, attack: .01 });
                    tone({ freq: f * 2, dur: .3, vol: .035, at: i * .09 });
                    tone({ freq: f * 3, dur: .15, vol: .012, at: i * .09 }); });
                  noise({ dur: .9, vol: .03, f0: 4000, f1: 9000, q: .7, attack: .3, at: .2 }); },
+    scrollTick() { tone({ freq: 1100, end: 800, type: 'triangle', dur: .03, vol: .035 });
+                 noise({ dur: .02, vol: .02, f0: 2500, ft: 'highpass' }); },
     appear()   { tone({ freq: 660, end: 880, dur: .07, vol: .045, attack: .006 }); },
     cardIn(i)  { const n = [392, 440, 523.25, 587.33, 659.25][(i | 0) % 5];
                  tone({ freq: 170, end: 110, dur: .12, vol: .1 });
@@ -230,7 +234,7 @@
 
   /* ── Pemutar (throttle per nama supaya tidak numpuk) ── */
   const GAP = { hover: 40, hoverCard: 90, hoverBlip: 50, cell: 28, key: 16, keyBack: 20,
-                scrollKey: 70, letter: 55, squeak: 90, fix: 200, sweep: 120, dizzy: 400, paint: 25, scrub: 35, thud: 70, throw: 150, bonk: 80, scatter: 400, welcome: 3000, appear: 120, cardIn: 150, skillIn: 60, section: 400, whoosh: 300, pop: 40, bubble: 60, focus: 40, focusField: 60, error: 250, tap: 60 };
+                scrollKey: 70, letter: 55, squeak: 90, fix: 200, sweep: 120, dizzy: 400, paint: 25, scrub: 35, thud: 70, throw: 150, bonk: 80, scatter: 400, welcome: 3000, scrollTick: 75, appear: 120, cardIn: 150, skillIn: 60, section: 400, whoosh: 300, pop: 40, bubble: 60, focus: 40, focusField: 60, error: 250, tap: 60 };
   const last = Object.create(null);
 
   function play(name, arg) {
@@ -446,6 +450,8 @@
 
   window.SFX = {
     play, vibrate,
+    wake: unlock,
+    running: () => !!ctx && ctx.state === 'running',
     isEnabled: () => enabled,
     setEnabled(v) {
       enabled = !!v;

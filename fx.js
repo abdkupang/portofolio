@@ -55,7 +55,8 @@
     else {
       const last = wipe.querySelector('i:nth-child(1)');
       last && last.addEventListener('animationend', clearWipe, { once: true });
-      setTimeout(clearWipe, 1800);                       // jaring pengaman
+      const arm = () => setTimeout(clearWipe, 1800);      // jaring pengaman
+      if (root.classList.contains('gated')) window.addEventListener('gate-open', arm, { once: true }); else arm();
     }
   }
   // balik dari halaman lain lewat tombol Back (bfcache) → buka tirai lagi
@@ -137,6 +138,15 @@
       if (!first && window.scrollY > 40) sfx('section');
     }), { rootMargin: '-45% 0px -50% 0px' });
     $$('main section[id], body > section[id], section[id]').forEach(s => io.observe(s));
+  }
+
+  /* ───────── Tik halus saat halaman digulir ───────── */
+  {
+    let lastY2 = window.scrollY, acc = 0;
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY; acc += Math.abs(y - lastY2); lastY2 = y;
+      if (acc >= 150) { acc = 0; sfx('scrollTick'); }
+    }, { passive: true });
   }
 
   /* ───────── Bunyi saat item muncul di layar (scroll) ───────── */
