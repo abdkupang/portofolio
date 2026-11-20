@@ -50,12 +50,23 @@
     return ctx;
   }
 
+  /* suara sambutan saat halaman dibuka (langsung kalau boleh autoplay, kalau tidak → pada sentuhan pertama) */
+  let welcomed = false;
+  function welcome() {
+    if (welcomed || !enabled || !ctx || ctx.state !== 'running') return;
+    welcomed = true;
+    try { S.welcome(); } catch (_) {}
+  }
+  const tryWelcome = () => { try { ensure(); if (ctx && ctx.state === 'suspended') ctx.resume().then(welcome).catch(noop); else welcome(); } catch (_) {} };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(tryWelcome, 350));
+  else setTimeout(tryWelcome, 350);
+
   const UNLOCK_EVENTS = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'];
   function unlock() {
     gestureUntil = performance.now() + 250;
     const c = ensure();
     if (!c) return;
-    if (c.state === 'suspended') c.resume().catch(noop);
+    if (c.state === 'suspended') c.resume().then(welcome).catch(noop); else welcome();
     if (!unlocked) {
       try {                                           // trik "silent buffer" untuk iOS Safari
         const s = c.createBufferSource();
@@ -188,6 +199,30 @@
     thud()     { tone({ freq: 130, end: 60, dur: .13, vol: .2 });
                  noise({ dur: .05, vol: .05, f0: 500, q: 1 }); },
     section()  { tone({ freq: 880, end: 1175, dur: .07, vol: .05, attack: .004 }); },
+    throw(v)   { v = v == null ? .7 : v;
+                 noise({ dur: .4, vol: .07 + .08 * v, f0: 300, f1: 2800, q: .9 });
+                 tone({ freq: 260, end: 900, type: 'triangle', dur: .3, vol: .04 + .07 * v });
+                 tone({ freq: 700, end: 1500, type: 'square', dur: .08, vol: .03, at: .02 }); },
+    bonk(v)    { v = v == null ? .6 : v;
+                 tone({ freq: 520, end: 240, type: 'square', dur: .07, vol: .02 + .06 * v });
+                 tone({ freq: 150, end: 70, dur: .1, vol: .16 * v });
+                 noise({ dur: .04, vol: .05 * v, f0: 900, q: 1.2 }); },
+    scatter()  { noise({ dur: .35, vol: .12, f0: 1800, f1: 300, q: .6 });
+                 for (let i = 0; i < 5; i++) tone({ freq: 420 + i * 130 + Math.random() * 60, end: 200, type: 'triangle', dur: .12, vol: .08, at: i * .045 }); },
+    welcome()  { [392, 494, 587, 784, 988].forEach((f, i) => {
+                   tone({ freq: f, dur: .5, vol: .1, at: i * .09, attack: .01 });
+                   tone({ freq: f * 2, dur: .3, vol: .035, at: i * .09 });
+                   tone({ freq: f * 3, dur: .15, vol: .012, at: i * .09 }); });
+                 noise({ dur: .9, vol: .03, f0: 4000, f1: 9000, q: .7, attack: .3, at: .2 }); },
+    appear()   { tone({ freq: 660, end: 880, dur: .07, vol: .045, attack: .006 }); },
+    cardIn(i)  { const n = [392, 440, 523.25, 587.33, 659.25][(i | 0) % 5];
+                 tone({ freq: 170, end: 110, dur: .12, vol: .1 });
+                 tone({ freq: n, type: 'triangle', dur: .22, vol: .09, at: .03 });
+                 tone({ freq: n * 2, dur: .12, vol: .025, at: .03 });
+                 noise({ dur: .08, vol: .03, f0: 1500, f1: 600, q: 1.2 }); },
+    skillIn(i) { const n = PENTA[(i | 0) % PENTA.length];
+                 tone({ freq: n, type: 'triangle', dur: .14, vol: .07 });
+                 tone({ freq: n * 2, dur: .08, vol: .02 }); },
     on()       { tone({ freq: 520, end: 780, dur: .09, vol: .13 });
                  tone({ freq: 780, end: 1040, dur: .11, vol: .1, at: .06 }); },
     off()      { tone({ freq: 700, end: 400, dur: .1, vol: .12 }); },
@@ -195,7 +230,7 @@
 
   /* ── Pemutar (throttle per nama supaya tidak numpuk) ── */
   const GAP = { hover: 40, hoverCard: 90, hoverBlip: 50, cell: 28, key: 16, keyBack: 20,
-                scrollKey: 70, letter: 55, squeak: 90, fix: 200, sweep: 120, dizzy: 400, paint: 25, scrub: 35, thud: 70, section: 400, whoosh: 300, pop: 40, bubble: 60, focus: 40, focusField: 60, error: 250, tap: 60 };
+                scrollKey: 70, letter: 55, squeak: 90, fix: 200, sweep: 120, dizzy: 400, paint: 25, scrub: 35, thud: 70, throw: 150, bonk: 80, scatter: 400, welcome: 3000, appear: 120, cardIn: 150, skillIn: 60, section: 400, whoosh: 300, pop: 40, bubble: 60, focus: 40, focusField: 60, error: 250, tap: 60 };
   const last = Object.create(null);
 
   function play(name, arg) {

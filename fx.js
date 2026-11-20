@@ -139,6 +139,33 @@
     $$('main section[id], body > section[id], section[id]').forEach(s => io.observe(s));
   }
 
+  /* ───────── Bunyi saat item muncul di layar (scroll) ───────── */
+  if ('IntersectionObserver' in window) {
+    const seen = new WeakSet();
+    let batch = [], raf = 0, ready = false, n = 0;
+    setTimeout(() => { ready = true; }, 1500);                 // jangan berisik saat halaman baru dibuka
+    const kindOf = el => el.matches('.project-card, .featured-item') ? 'cardIn' : el.matches('.skill-item') ? 'skillIn' : 'appear';
+    const flush = () => {
+      raf = 0;
+      batch.splice(0).slice(0, 3).forEach((el, i) => setTimeout(() => sfx(kindOf(el), n++), i * 80));
+    };
+    const io = new IntersectionObserver(es => es.forEach(en => {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      if (!(ready || window.scrollY > 40)) return;
+      batch.push(en.target);
+      if (!raf) raf = requestAnimationFrame(flush);
+    }), { threshold: .18, rootMargin: '0px 0px -6% 0px' });
+    let scanT = 0;
+    const scan = () => {
+      scanT = 0;
+      $$('.reveal, .rev').forEach(el => { if (!seen.has(el)) { seen.add(el); io.observe(el); } });
+    };
+    const sched = () => { if (!scanT) scanT = setTimeout(scan, 160); };
+    new MutationObserver(sched).observe(document.body, { childList: true, subtree: true });
+    sched();
+  }
+
   /* ───────── Pita teknologi: gandakan isi supaya mulus ───────── */
   const mq = $('#marquee');
   if (mq) mq.innerHTML += mq.innerHTML;

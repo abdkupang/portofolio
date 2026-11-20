@@ -26,11 +26,52 @@
   const DRAG_SEL = '.section-eyebrow, .info-row, .tech-badge, .contact-link-icon, .contact-link, .footer .nav-logo, .footer-links a, ' +
     '.hero-stat, .hero-role, .hero-hi, .hero-eyebrow, .hero-photo, .hero-chip, .hero-bubble, .fi-num, .filter-label, .filter-btn, ' +
     '.page-h1 em, .tag, .d-tags-label, .d-readme-label, .d-progress, .badge, .gh-profile-link, .btn, .link-view-all, .skill-item, ' +
-    '.back-btn, .page-back';
+    '.back-btn, .page-back, .featured-item, .project-card';
+  const SCATTER_SEL = '.featured-item, .project-card, .contact-link';
+  const PART_SEL = '.fi-visual, .fi-num, .fi-title, .fi-subtitle, .fi-desc, .fi-tags > *, .fi-status > *, .fi-info .btn, ' +
+    '.card-visual, .card-top > *, .card-sub, .card-desc, .card-tags > *, .card-actions .btn, ' +
+    '.contact-link-icon, .contact-link-label, .contact-link-value';
+  const PHYS_IMG = '.fi-desktop img, .card-desktop-thumb img, .d-desktop img';
   const PERCH_SEL = '.btn, .link-view-all, .filter-btn, .project-card, .featured-item, .skill-item, .contact-link, .contact-form, ' +
     '.about-info, .gh-contrib-wrap, .hero-photo, .hero-stat, .hero-chip, .hero-bubble, .section-title, .page-h1, .hero-h1, .d-visual, ' +
     '.d-readme, .footer-links a, .tech-badge, .info-row, .nav-inner, .form-control, .marquee-wrap, .section-eyebrow, .tag, .badge, img';
   const NO_DRAG = '.nav, .ami-chat, .physics-hint, .music-toggle, .sfx-toggle';
+  /* ikon SVG (menggantikan emoji bawaan) */
+  const IC = {
+    smile: '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/>',
+    hand: '<path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-6-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>',
+    music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+    vol: '<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>',
+    mute: '<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/>',
+    compass: '<circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2.1 6.3-6.3 2.1 2.1-6.3z"/>',
+    mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+    zap: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+    spark: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+    up: '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>',
+    down: '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/>',
+    right: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    jump: '<path d="m17 11-5-5-5 5"/><path d="m17 18-5-5-5 5"/>',
+    mic: '<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/>',
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>',
+    heart: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/>',
+    check: '<path d="M20 6 9 17l-5-5"/>',
+    eye: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    help: '<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+    rocket: '<path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2a2.2 2.2 0 0 0-3-3z"/><path d="m12 15-3-3a22 22 0 0 1 2-4A13 13 0 0 1 22 2c0 2.7-.8 7.5-6 11a22 22 0 0 1-4 2z"/><path d="M9 12H4s.6-3 2-4c1.6-1.1 5 0 5 0M12 15v5s3-.6 4-2c1.1-1.6 0-5 0-5"/>',
+    wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/>',
+    spin: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+    send: '<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
+    x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+    star: '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.3-6.2 3.3L7 14.2 2 9.3l6.9-1z"/>',
+    bolt: '<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+  };
+  const ic = n => IC[n] ? `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${IC[n]}</svg>` : '';
+  function bubbleText(el, t, icon) {
+    el.textContent = '';
+    if (icon && IC[icon]) el.insertAdjacentHTML('beforeend', ic(icon));
+    el.appendChild(document.createTextNode(t));
+  }
+
   const css = document.createElement('style');
   css.textContent = `.ami .t-wrench,.ami .t-broom{display:none}
   .ami.tool-wrench .t-wrench,.ami.tool-broom .t-broom{display:inline}
@@ -69,7 +110,7 @@
   ami.setAttribute('aria-label', 'Ami, asisten kecil. Tekan untuk menyapa');
   ami.innerHTML = `<div class="ami-shadow"></div><div class="ami-flip"><div class="ami-body">${SVG}</div></div><div class="ami-z" aria-hidden="true">z</div><div class="ami-say" aria-live="polite"></div>`;
   document.body.appendChild(ami);
-  const sayEl = $('.ami-say', ami), pupil = $('.ami-pupil', ami);
+  const sayEl = $('.ami-say', ami), pupil = $('.ami-pupil', ami), bodyEl = $('.ami-body', ami);
 
   const A = { x: -120, y: 0, anim: null, held: false, since: 0, token: 0, lift: 0 };
   let perch = null, acting = false, sleepLock = 0;
@@ -117,8 +158,8 @@
 
   /* ───────── Bicara ───────── */
   let sayT = 0;
-  function say(t, ms) {
-    sayEl.textContent = t;
+  function say(t, ms, icon) {
+    bubbleText(sayEl, t, icon);
     const x = A.x;
     sayEl.style.setProperty('--sx', x < 90 ? '-8%' : x > W() - 190 ? '-88%' : '-32%');
     sayEl.classList.toggle('below', A.y < 90);
@@ -129,7 +170,7 @@
   function wake() {
     if (Date.now() < sleepLock) return;
     A.since = 0;
-    if (ami.classList.contains('sleeping')) { ami.classList.remove('sleeping'); say('Hm? Oh, hai lagi!', 1500); }
+    if (ami.classList.contains('sleeping')) { ami.classList.remove('sleeping'); say('Hm? Oh, hai lagi!', 1500, 'eye'); }
   }
 
   /* ───────── Mata mengikuti pointer ───────── */
@@ -148,11 +189,11 @@
   ['keydown', 'scroll'].forEach(ev => window.addEventListener(ev, () => { if (A.since > 2) wake(); A.since = 0; }, { passive: true }));
 
   /* ───────── Colek ───────── */
-  const POKE = ['Eh! Geli tau 😆', 'Hehe, halo!', 'Ada yang bisa kubantu?', 'Colek lagi dong!', 'Aku Ami, asisten kecilmu.', 'Tarik aku juga bisa lho!', 'Bip bop! 🤖'];
+  const POKE = ['Eh! Geli tau!', 'Hehe, halo!', 'Ada yang bisa kubantu?', 'Colek lagi dong!', 'Aku Ami, asisten kecilmu.', 'Tarik aku juga bisa lho!', 'Lempar aku juga boleh!', 'Bip bop!'];
   let pokes = [];
   function dizzy(ms) {
-    ami.classList.add('dizzy'); sfx('dizzy'); say('Pusiiing…', 1600);
-    setTimeout(() => { ami.classList.remove('dizzy'); say('Hehe, udah gapapa.', 1600); }, ms || 2200);
+    ami.classList.add('dizzy'); sfx('dizzy'); say('Pusiiing…', 1600, 'spin');
+    setTimeout(() => { ami.classList.remove('dizzy'); say('Hehe, udah gapapa.', 1600, 'smile'); }, ms || 2200);
   }
   function poke() {
     wake();
@@ -162,7 +203,7 @@
     const now = Date.now();
     pokes = pokes.filter(t => now - t < 3000); pokes.push(now);
     if (window.FX) window.FX.burst(A.x + sz.w / 2, A.y + 14, 6, 50);
-    if (pokes.length >= 5) { pokes = []; dizzy(2200); } else say(pick(POKE), 1800);
+    if (pokes.length >= 5) { pokes = []; dizzy(2200); } else say(pick(POKE), 1800, pick(['smile', 'star', 'bolt']));
   }
   ami.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); if (chat.hidden) openChat(true); } });
 
@@ -234,7 +275,7 @@
   }
   function origPos(g) { const r = g.src.getBoundingClientRect(); return { x: r.left + scrollX, y: r.top + scrollY, r }; }
   function dropGhost(g) {                              // hapus salinan, tampilkan asli
-    g.src.style.visibility = ''; g.el.remove(); ghosts.delete(g);
+    g.src.style.visibility = g.restoreVis || ''; g.el.remove(); ghosts.delete(g);
     g.src.classList.remove('ami-wiggle'); void g.src.offsetWidth; g.src.classList.add('ami-wiggle');
     setTimeout(() => g.src.classList.remove('ami-wiggle'), 600);
   }
@@ -281,15 +322,15 @@
     }
     g.state = 'mess';
     g.el.classList.add('mess');
-    if (queue.every(m => m.g !== g)) enqueue({ type: 'ghost', g, ready: Date.now() + 1500 });
-    if (!busy) say(pick(['Wah, jatuh!', 'Ups, berantakan…', 'Waduh!']), 1500);
+    if (queue.every(m => m.g !== g)) enqueue({ type: 'ghost', g, ready: Date.now() + 1100 });
+    if (!busy) say(pick(['Wah, jatuh!', 'Ups, berantakan…', 'Waduh!']), 1500, 'help');
   }
 
   /* ───────── Antrian pekerjaan Ami ───────── */
   const queue = [];
   let busy = false;
   function enqueue(m) { m.created = Date.now(); queue.push(m); work(); }
-  const FIXED = ['Beres! ✨', 'Rapi lagi~', 'Hup! Kembali ke tempatnya.', 'Jangan dirusak terus ya 😆', 'Ami on duty 🛠️', 'Sip, sudah kuberesin!'];
+  const FIXED = ['Beres!', 'Rapi lagi~', 'Hup! Kembali ke tempatnya.', 'Jangan dirusak terus ya', 'Ami on duty!', 'Sip, sudah kuberesin!'];
   function visibleOf(m) {
     let r;
     if (m.type === 'ghost') {
@@ -300,6 +341,7 @@
     else if (m.type === 'skill') r = m.item.getBoundingClientRect();
     return !!r && r.bottom > 0 && r.top < H() - 8;
   }
+  const hurry = () => queue.length > 2;
   async function work() {
     if (busy) return;
     busy = true;
@@ -311,7 +353,7 @@
         queue.splice(0, queue.length, ...queue.filter(m => !m.removed));
         if (!queue.length) break;
         if (!ready.length) { await wait(250); continue; }
-        const vis = ready.filter(visibleOf);
+        const vis = ready.filter(visibleOf).sort((a, b) => ((b.g && b.g.shell) ? 1 : 0) - ((a.g && a.g.shell) ? 1 : 0));
         let m = vis[0];
         if (!m) {
           const old = ready.find(x => now - x.created > 4000);
@@ -322,7 +364,7 @@
         if (m.type === 'ghost') await fixGhost(m);
         else if (m.type === 'cells') await fixCells(m);
         else if (m.type === 'skill') await fixSkill(m);
-        await wait(250);
+        await wait(hurry() ? 60 : 250);
       }
     } finally {
       ami.classList.remove('tool-wrench', 'tool-broom');
@@ -332,51 +374,81 @@
   }
   const standY = r => (r.top - sz.h + 10 < 6 ? r.bottom + 2 : r.top - sz.h + 10);
   const standX = r => clamp(r.left + r.width / 2 - sz.w / 2, 4, W() - sz.w - 4);
+  const standOf = r => ({ x: standX(r), y: standY(r) });
+  /* menuju elemen & cek ulang posisinya (layar bisa tergulir saat Ami terbang) */
+  async function goStand(getRect, stand) {
+    stand = stand || standOf;
+    for (let i = 0; i < 3; i++) {
+      const s = stand(getRect());
+      await move(s.x, s.y, { fly: true });
+      if (A.held) return false;
+      const s2 = stand(getRect());
+      if (Math.hypot(s2.x - A.x, s2.y - A.y) < 10) return true;
+    }
+    return true;
+  }
+  /* Ami menempel pada elemen yang bergerak / tergulir */
+  function track(getRect, stand) {
+    stand = stand || standOf;
+    let on = true;
+    (function f() {
+      if (!on) return;
+      if (!A.held && !A.anim) { const s = stand(getRect()); place(s.x, s.y); }
+      requestAnimationFrame(f);
+    })();
+    return () => { on = false; };
+  }
+  const onScreen = r => r.bottom > 0 && r.top < H() - 8 && r.right > 0 && r.left < W();
 
   async function fixGhost(m) {
     const g = m.g;
     if (!ghosts.has(g)) return;
     g.state = 'carried'; g.el.classList.add('carried'); g.el.classList.remove('mess');
-    const gy = g.y - scrollY;
-    const ghostVis = gy > -g.h * .5 && gy < H() - 8;
-    let o = origPos(g), r = o.r;
-    const origVis = r.bottom > 0 && r.top < H() - 8;
+    const gRect = () => g.el.getBoundingClientRect();
+    const srcRect = () => g.src.getBoundingClientRect();
+    const ghostVis = onScreen(gRect()), origVis = onScreen(srcRect());
     if (!origVis && !ghostVis) {                       // dua-duanya di luar layar → kembalikan diam-diam
-      g.el.remove(); ghosts.delete(g); g.src.style.visibility = ''; return;
+      g.el.remove(); ghosts.delete(g); g.src.style.visibility = g.restoreVis || ''; return;
     }
-    if (!ghostVis) {                                   // item tertinggal di tempat lain, tapi tempat asalnya sedang terlihat
-      say('Eh, ada yang ketinggalan! Kujemput~', 1600);
-      await move(standX(r), standY(r), { fly: true });
+    let stop = null;
+    if (!ghostVis) {                                   // item tertinggal di tempat lain, tapi tempat asalnya terlihat
+      say('Eh, ada yang ketinggalan! Kujemput~', 1600, 'help');
+      await goStand(srcRect);
       ami.classList.add('tool-wrench'); sfx('grab');
+      const o = origPos(g);
       g.x = o.x; g.y = o.y; g.rot = 0;
+      stop = track(srcRect);
       const an = g.el.animate([{ transform: gT(g, o.x, o.y, 0, .15), opacity: 0 }, { transform: gT(g, o.x, o.y, 0, 1.12), opacity: 1, offset: .7 }, { transform: gT(g, o.x, o.y, 0, 1), opacity: 1 }],
         { duration: reduce ? 1 : 520, easing: 'cubic-bezier(.34,1.4,.5,1)', fill: 'forwards' });
       await an.finished.catch(() => {});
     } else {
-      const gv = { left: g.x - scrollX, top: g.y - scrollY, width: g.w, height: g.h };
-      say(pick(['Tenang, kuambil ya!', 'Hup! Kuamankan.', 'Sebentar, Ami datang!']), 1500);
-      await move(standX(gv), standY(gv), { fly: true });
+      say(pick(['Tenang, kuambil ya!', 'Hup! Kuamankan.', 'Sebentar, Ami datang!']), 1500, 'wrench');
+      await goStand(gRect);
       if (A.held) { g.state = 'mess'; g.el.classList.remove('carried'); g.el.classList.add('mess'); queue.push(m); return; }
       ami.classList.add('tool-wrench'); sfx('grab');
-      await wait(220);
-      o = origPos(g); r = o.r;
-      if (!(r.bottom > 0 && r.top < H())) {            // asal tak terlihat lagi → kantongi
+      stop = track(gRect);                             // Ami ikut item meski halaman tergulir
+      await wait(hurry() ? 60 : 220);
+      const o = origPos(g);
+      if (!onScreen(srcRect())) {                      // asal tak terlihat lagi → kantongi
         const an = g.el.animate([{ transform: gT(g), opacity: 1 }, { transform: gT(g, g.x, g.y - 30, 0, .2), opacity: 0 }], { duration: 300, easing: 'ease-in', fill: 'forwards' });
         await an.finished.catch(() => {});
-        dropGhost(g); sfx('fix'); say('Sudah kukembalikan ke tempatnya!', 2000);
+        stop(); dropGhost(g); sfx('fix'); say('Sudah kukembalikan ke tempatnya!', 2000, 'check');
         return;
       }
       const an = g.el.animate([{ transform: gT(g) }, { transform: gT(g, o.x, o.y, 0) }],
-        { duration: reduce ? 1 : 780, easing: 'cubic-bezier(.34,1.35,.5,1)', fill: 'forwards' });
-      await Promise.all([an.finished.catch(() => {}), move(standX(r), standY(r), { fly: true })]);
+        { duration: reduce ? 1 : (hurry() ? 480 : 780), easing: 'cubic-bezier(.34,1.35,.5,1)', fill: 'forwards' });
+      await an.finished.catch(() => {});
     }
+    if (stop) stop();
     dropGhost(g);
     sfx('fix');
     ami.classList.remove('happy'); void ami.offsetWidth; ami.classList.add('happy');
     setTimeout(() => ami.classList.remove('happy'), 600);
+    const r = srcRect();
+    await goStand(srcRect);
     if (window.FX) window.FX.burst(r.left + r.width / 2, r.top + r.height / 2, 8, 60);
-    say(pick(FIXED), 2000);
-    await wait(500);
+    if (!hurry()) say(pick(FIXED), 2000, pick(['check', 'spark']));
+    await wait(hurry() ? 80 : 450);
   }
 
   /* ───────── Heatmap GitHub: coret & sapu ───────── */
@@ -415,21 +487,20 @@
     if (c && lastType !== 'mouse') paint(c, false);
   });
   async function fixCells(m) {
-    say('Sapu sapu~', 1500);
+    say('Sapu sapu~', 1500, 'spark');
     ami.classList.add('tool-broom');
+    const cellStand = r => ({ x: clamp(r.left - sz.w / 2 + 6, 2, W() - sz.w - 2), y: clamp(r.top - sz.h + 6, 4, H() - sz.h) });
     let n = 0;
     for (const c of m.cells) {
       if (A.held) { m.cells.forEach(restoreCell); return; }
-      const r = c.getBoundingClientRect();
-      const vis = r.right > 0 && r.left < W() && r.bottom > 0 && r.top < H();
-      if (!vis || n > 16) { restoreCell(c); continue; }
+      if (!onScreen(c.getBoundingClientRect()) || n > 16) { restoreCell(c); continue; }
       n++;
-      await move(clamp(r.left - sz.w / 2 + 6, 2, W() - sz.w - 2), clamp(r.top - sz.h + 6, 4, H() - sz.h), { fly: true });
+      await goStand(() => c.getBoundingClientRect(), cellStand);
       restoreCell(c); sfx('sweep');
     }
     ami.classList.remove('tool-broom');
     sfx('fix'); ami.classList.add('happy'); setTimeout(() => ami.classList.remove('happy'), 600);
-    say('Bersih! ✨', 1800);
+    say('Bersih!', 1800, 'spark');
   }
 
   /* ───────── Bar skill: geser & kembalikan ───────── */
@@ -470,10 +541,11 @@
   document.addEventListener('pointerup', endScrub);
   document.addEventListener('pointercancel', endScrub);
   async function fixSkill(m) {
-    const r = m.item.getBoundingClientRect();
-    say('Eits, level aslinya jangan diubah~', 1700);
+    const itemRect = () => m.item.getBoundingClientRect();
+    say('Eits, level aslinya jangan diubah~', 1700, 'wrench');
     ami.classList.add('tool-wrench');
-    await move(standX(r), standY(r), { fly: true });
+    await goStand(itemRect);
+    const stop = track(itemRect);
     const from = parseFloat(m.fill.style.width) || m.orig;
     m.fill.style.width = m.orig + '%';
     const t0 = performance.now(), dur = reduce ? 1 : 650;
@@ -483,8 +555,9 @@
       k < 1 ? requestAnimationFrame(step) : res();
     })(t0));
     m.pct.textContent = m.orig + '%';
+    stop();
     sfx('fix'); ami.classList.add('happy'); setTimeout(() => ami.classList.remove('happy'), 600);
-    say(pick(FIXED), 1800);
+    say(pick(FIXED), 1800, 'check');
   }
 
   /* ───────── Mesin seret (item, salinan, Ami) ───────── */
@@ -501,6 +574,7 @@
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     const t = e.target;
     if (!t.closest) return;
+    if (t.closest(PHYS_IMG)) return;
     const isAmi = t.closest('.ami'), gEl = t.closest('.ami-ghost');
     const item = !isAmi && !gEl ? t.closest(DRAG_SEL) : null;
     if (!isAmi && !gEl && !item) return;
@@ -530,11 +604,11 @@
       drag.g.el.classList.add('held');
       try { drag.g.el.setPointerCapture(drag.id); } catch (_) {}
     } else {                                           // Ami diangkat
-      A.held = true; unperch(); sync(); ami.classList.add('held', 'o');
+      stopFlight(); A.held = true; unperch(); sync(); ami.classList.add('held', 'o');
       ami.classList.remove('flying', 'walking');
       drag.offX = sz.w / 2; drag.offY = sz.h * .4;
       try { ami.setPointerCapture(drag.id); } catch (_) {}
-      say('Eeeh, turunin!', 1400);
+      say(pick(['Eeeh, turunin!', 'Hati-hati dong!', 'Aku mau dilempar nih?']), 1400, 'help');
     }
     sfx(drag.g ? 'grab' : 'squeak');
     if (navigator.vibrate) { try { navigator.vibrate(12); } catch (_) {} }
@@ -586,47 +660,97 @@
     if (!d.started) { if (d.kind === 'ami' && e && e.type === 'pointerup') { poke(); if (chat.hidden) openChat(true); } return; }
     blockClick = Date.now() + 400;
     const v = (() => { drag = d; const r = velocity(); drag = null; return r; })();
-    if (d.g) { fall(d.g, v.vx, v.vy); sfx('drop'); }
-    else dropAmi(v, d.px, d.py);
+    if (d.g) { sfx('drop'); if (d.g.src.matches(SCATTER_SEL)) scatterCard(d.g, v); else fall(d.g, v.vx, v.vy); }
+    else throwAmi(v);
   }
   document.addEventListener('pointerup', endDrag);
   document.addEventListener('pointercancel', endDrag);
 
-  async function dropAmi(v, px, py) {
-    ami.classList.remove('held', 'o');
-    const tgt = perchTargetAt(px, py);
-    if (tgt) {
-      const r = tgt.getBoundingClientRect();
-      const tx = clamp(px - sz.w / 2, Math.max(2, r.left), Math.max(2, Math.min(W() - sz.w - 2, r.right - sz.w)));
-      await move(tx, perchY(r), { fly: true, keepPerch: true });
-      A.held = false;
-      perchOn(tgt, tx - r.left);
-      sfx('settle');
-      say(pick(['Pemandangan dari sini bagus!', 'Aku di atas! 😎', 'Hup, naik!', 'Nyaman juga di sini~']), 2200);
+  /* ───────── Dilempar! (fisika: gravitasi, pantulan dinding & lantai) ───────── */
+  let flight = null;
+  function stopFlight() {
+    if (flight) { flight.stop = true; flight = null; }
+    bodyEl.style.rotate = ''; ami.classList.remove('tumble');
+  }
+  function throwAmi(v, onLand) {
+    ami.classList.remove('held', 'o', 'walking');
+    ami.classList.add('flying', 'tumble');
+    unperch();
+    A.held = true;
+    let vx = clamp(v.vx * 1.2, -3.6, 3.6), vy = clamp(v.vy * 1.2, -3.6, 3.6);
+    const speed = Math.hypot(vx, vy);
+    if (speed > .45) { sfx('throw', clamp(speed / 2.4, .3, 1)); say(pick(['Wuuuush!', 'Aaaaa!', 'Terbaaang!', 'Ya ampun!']), 1100, 'rocket'); }
+    let x = A.x, y = A.y, rot = 0, spin = clamp(vx * .45, -1.1, 1.1) || .2;
+    const f = flight = { stop: false };
+    const G = .0024, t0 = performance.now();
+    let last = t0, hits = 0, wallAt = 0;
+    const done = () => {
+      ami.classList.remove('flying', 'tumble');
+      rot = ((rot % 360) + 540) % 360 - 180;
+      bodyEl.style.transition = 'rotate .3s var(--spring)';
+      bodyEl.style.rotate = '0deg';
+      setTimeout(() => { bodyEl.style.transition = ''; bodyEl.style.rotate = ''; }, 340);
+      A.held = false; flight = null;
+      sfx('thud');
+      ami.classList.remove('squish'); void ami.offsetWidth; ami.classList.add('squish');
+      setTimeout(() => ami.classList.remove('squish'), 520);
+      if (hits >= 4 || speed > 2.2) dizzy(1800); else say(pick(['Fiuh, mendarat!', 'Hup!', 'Jangan dilempar-lempar dong']), 1800, 'smile');
       if (queue.length) work();
-      return;
-    }
-    const fast = Math.hypot(v.vx, v.vy) > 1.4;
-    const gy = ground(), dist = gy - A.y;
-    const tx = clamp(A.x + v.vx * 160, 4, Math.max(8, rightLimit()));
-    if (dist > 6) {
-      const dur = reduce ? 1 : clamp(Math.sqrt(dist) * 28, 160, 650);
-      setDir(tx - A.x);
-      const an = ami.animate([{ transform: T(A.x, A.y), easing: 'cubic-bezier(.5,0,1,.6)' }, { transform: T(tx, gy), offset: .72 },
-        { transform: T(tx, gy - 22), offset: .86, easing: 'ease-out' }, { transform: T(tx, gy) }], { duration: dur + 260 });
-      A.anim = an;
-      await an.finished.catch(() => {});
-      if (A.anim === an) A.anim = null;
-    }
-    place(tx, gy);
-    A.held = false;
-    sfx('thud');
-    ami.classList.remove('squish'); void ami.offsetWidth; ami.classList.add('squish');
-    setTimeout(() => ami.classList.remove('squish'), 520);
-    if (fast || dist > H() * .45) dizzy(1800); else say(pick(['Fiuh, mendarat!', 'Hup!', 'Jangan dilempar-lempar dong 😅']), 1800);
-    if (queue.length) work();
+      if (onLand) onLand();
+    };
+    if (reduce) { place(clamp(x + vx * 120, 0, W() - sz.w), ground()); return done(); }
+    (function frame(now) {
+      if (f.stop) return;
+      const dt = Math.min(32, now - last); last = now;
+      vy += G * dt; x += vx * dt; y += vy * dt; rot += spin * dt;
+      const fl = ground(), maxX = W() - sz.w;
+      const hitSfx = k => { if (now - wallAt > 90) { wallAt = now; sfx('bonk', k); } };
+      if (x < 0) { x = 0; vx = Math.abs(vx) * .72; spin = -spin * .7; hits++; hitSfx(clamp(Math.abs(vx) / 1.6, .3, 1)); }
+      if (x > maxX) { x = maxX; vx = -Math.abs(vx) * .72; spin = -spin * .7; hits++; hitSfx(clamp(Math.abs(vx) / 1.6, .3, 1)); }
+      if (y < 0) { y = 0; vy = Math.abs(vy) * .5; hits++; hitSfx(.5); }
+      if (y >= fl) {
+        y = fl;
+        if (vy > .3) { hits++; sfx('bounce', clamp(vy / 1.5, .3, 1)); vy = -vy * .5; vx *= .84; spin *= .6; }
+        else { vy = 0; vx *= .88; spin *= .75; }
+      }
+      place(x, y);
+      bodyEl.style.rotate = rot + 'deg';
+      setDir(vx);
+      const rest = y >= fl - .5 && Math.abs(vy) < .012 && Math.abs(vx) < .02 && Math.abs(spin) < .02;
+      if (rest || now - t0 > 7000) { flight = null; return done(); }
+      requestAnimationFrame(frame);
+    })(last);
   }
 
+  /* ───────── Kartu dijatuhkan: isinya berhamburan ───────── */
+  function collectParts(card) {
+    let els = $$(PART_SEL, card).filter(e => {
+      if (e.style.visibility === 'hidden') return false;
+      const r = e.getBoundingClientRect();
+      return r.width > 10 && r.height > 10 && getComputedStyle(e).display !== 'none';
+    });
+    els = els.filter(e => !els.some(o => o !== e && o.contains(e)));
+    const area = e => { const r = e.getBoundingClientRect(); return r.width * r.height; };
+    return els.sort((a, b) => area(b) - area(a)).slice(0, 9);
+  }
+  function scatterCard(g, v, force) {
+    const o = origPos(g);
+    if (!force && Math.hypot(g.x - o.x, g.y - o.y) < 40) return fall(g, v.vx, v.vy);
+    const parts = collectParts(g.src);
+    if (!parts.length) return fall(g, v.vx, v.vy);
+    g.shell = true;
+    sfx('scatter');
+    parts.forEach((el, i) => {
+      const r = el.getBoundingClientRect();
+      const pg = makeGhost(el);
+      pg.restoreVis = 'visible';                       // kembali muncul walau kartunya masih "kosong"
+      pg.x = g.x + (r.left + scrollX - o.x); pg.y = g.y + (r.top + scrollY - o.y);
+      pg.rot = g.rot + rnd(-8, 8); render(pg);
+      setTimeout(() => fall(pg, v.vx * .5 + rnd(-1.4, 1.4), v.vy * .5 + rnd(-1.9, -.5)), i * 35);
+    });
+    g.el.querySelectorAll('*').forEach(c => { c.style.visibility = 'hidden'; });
+    fall(g, v.vx * .4, v.vy * .4);
+  }
 
   /* ───────── Bertengger di atas elemen ───────── */
   const perchY = r => Math.max(4, r.top - sz.h + 9);
@@ -674,7 +798,7 @@
     await move(tx, perchY(r), { fly: true, keepPerch: true });
     perchOn(el, tx - r.left);
     sfx('settle');
-    return `Sampai! Aku di atas ${label} 😎`;
+    return `Sampai! Aku di atas ${label}.`;
   }
 
   /* ───────── Ngobrol & perintah ───────── */
@@ -683,40 +807,49 @@
   chat.hidden = true;
   chat.setAttribute('role', 'dialog');
   chat.setAttribute('aria-label', 'Ngobrol dengan Ami');
-  const CHIPS = [['👋 Halo', 'halo'], ['🦘 Lompat', 'lompat'], ['💃 Menari', 'menari'], ['🧭 Ke Skill', 'ke skill'], ['📬 Ke Kontak', 'ke kontak'],
-    ['🙈 Berantakin', 'berantakin'], ['🧹 Beresin', 'beresin'], ['🔼 Naik ke tombol', 'naik ke tombol'], ['🏃 Ikuti kursor', 'ikuti aku'],
-    ['🎵 Musik', 'musik'], ['😂 Lelucon', 'lelucon'], ['🎤 Nyanyi', 'nyanyi'], ['😴 Tidur', 'tidur'], ['⬇️ Turun', 'turun']];
-  chat.innerHTML = `<div class="ami-chat-head"><strong>Ngobrol sama Ami</strong><button type="button" class="ami-chat-x" aria-label="Tutup obrolan">×</button></div>
-    <div class="ami-chat-log" aria-live="polite"></div>
-    <div class="ami-chat-chips">${CHIPS.map(c => `<button type="button" data-cmd="${c[1]}">${c[0]}</button>`).join('')}</div>
-    <form class="ami-chat-form"><input type="text" maxlength="80" placeholder="Ketik: lompat, ke skill, naik ke tombol…" autocomplete="off" enterkeyhint="send" aria-label="Pesan untuk Ami"><button type="submit">Kirim</button></form>`;
+  const CHIPS = [['hand', 'Halo', 'halo'], ['jump', 'Lompat', 'lompat'], ['music', 'Menari', 'menari'], ['compass', 'Ke Skill', 'ke skill'],
+    ['mail', 'Ke Kontak', 'ke kontak'], ['zap', 'Berantakin', 'berantakin'], ['spark', 'Beresin', 'beresin'], ['rocket', 'Lempar aku', 'lempar aku'],
+    ['right', 'Ikuti kursor', 'ikuti aku'], ['vol', 'Musik', 'musik'], ['smile', 'Lelucon', 'lelucon'], ['mic', 'Nyanyi', 'nyanyi'],
+    ['moon', 'Tidur', 'tidur'], ['up', 'Naik ke tombol', 'naik ke tombol'], ['down', 'Turun', 'turun']];
+  chat.innerHTML = `<div class="ami-chat-log" aria-live="polite"></div>
+    <div class="ami-chat-chips">${CHIPS.map(c => `<button type="button" data-cmd="${c[2]}">${ic(c[0])}${c[1]}</button>`).join('')}</div>
+    <form class="ami-chat-form"><input type="text" maxlength="80" placeholder="Ngobrol sama Ami…" autocomplete="off" enterkeyhint="send" aria-label="Pesan untuk Ami">
+      <button type="submit" class="ami-chat-send" aria-label="Kirim">${ic('send')}</button>
+      <button type="button" class="ami-chat-x" aria-label="Tutup obrolan">${ic('x')}</button></form>`;
   document.body.appendChild(chat);
   const logEl = $('.ami-chat-log', chat), input = $('input', chat);
-  function logLine(who, text) {
+  function logLine(who, text, icon) {
     const d = document.createElement('div');
-    d.className = 'l-' + who; d.textContent = text; logEl.appendChild(d);
-    while (logEl.children.length > 5) logEl.firstChild.remove();
+    d.className = 'l-' + who; bubbleText(d, text, icon); logEl.appendChild(d);
+    while (logEl.children.length > 4) logEl.firstChild.remove();
     logEl.scrollTop = logEl.scrollHeight;
   }
   function relift() {
-    A.lift = chat.hidden ? 0 : chat.offsetHeight + 8;
-    if (!perch && !busy && !A.held && !A.anim) move(clamp(A.x, 6, Math.max(10, rightLimit())), ground());
+    const h = chat.hidden ? 0 : chat.offsetHeight;
+    A.lift = h ? h + 10 : 0;
+    document.documentElement.style.setProperty('--chat-h', h + 'px');
+    document.body.classList.toggle('chat-open', !chat.hidden);
+    if (!perch && !busy && !A.held && !A.anim && !acting) move(clamp(A.x, 6, Math.max(10, rightLimit())), ground());
   }
   function openChat(v) {
     chat.hidden = !v;
     sfx(v ? 'menuOpen' : 'menuClose');
     relift();
-    if (v) { if (!logEl.children.length) { logLine('ami', 'Hai! Aku Ami 👋 Ketik perintah atau pilih tombol di bawah.'); } if (matchMedia('(hover:hover)').matches) input.focus({ preventScroll: true }); }
+    if (v) {
+      if (!logEl.children.length) logLine('ami', 'Hai! Aku Ami. Ketik perintah atau pilih tombol.', 'hand');
+      if (matchMedia('(hover:hover)').matches) input.focus({ preventScroll: true });
+    }
   }
   $('.ami-chat-x', chat).addEventListener('click', () => openChat(false));
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !chat.hidden) openChat(false); });
   $('.ami-chat-chips', chat).addEventListener('click', e => { const b = e.target.closest('button[data-cmd]'); if (b) ask(b.dataset.cmd); });
   $('form', chat).addEventListener('submit', e => { e.preventDefault(); const v = input.value.trim(); if (v) { input.value = ''; ask(v); } });
   window.addEventListener('resize', () => { if (!chat.hidden) relift(); }, { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(() => { if (!chat.hidden) relift(); }).observe(chat);
 
-  const JOKES = ['Kenapa programmer suka gelap? Karena cahaya menarik bug 🐛', 'Ada 10 jenis orang: yang ngerti biner dan yang enggak.',
-    'Aku nggak takut bug. Aku cuma takut deploy hari Jumat 😅', 'CSS itu gampang… sampai kamu mau center sebuah div.',
-    'Git commit -m "fix" — doa terpendek seorang developer 🙏', 'Aku bukan malas, aku lagi hemat energi mode ngoding.'];
+  const JOKES = ['Kenapa programmer suka gelap? Karena cahaya menarik bug.', 'Ada 10 jenis orang: yang ngerti biner dan yang enggak.',
+    'Aku nggak takut bug. Aku cuma takut deploy hari Jumat.', 'CSS itu gampang… sampai kamu mau center sebuah div.',
+    'git commit -m "fix" — doa terpendek seorang developer.', 'Aku bukan malas, aku lagi hemat energi mode ngoding.'];
   const hop = async n => {
     const x = A.x, y = A.y;
     for (let i = 0; i < n; i++) {
@@ -734,88 +867,97 @@
     }
     el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     ami.classList.add('happy'); setTimeout(() => ami.classList.remove('happy'), 600);
-    return 'Ikuti aku! Kita meluncur ke sana 🚀';
+    return 'Ikuti aku! Kita meluncur ke sana.';
   };
   const NOTES = [392, 440, 494, 587, 659, 784, 659, 587, 494, 440, 392];
+  const back = () => move(clamp(A.x, 8, Math.max(10, rightLimit())), ground());
   const RULES = [
-    [/terima ?kasih|makasih|thanks|thx|tengkyu/, () => 'Sama-sama! 💛'],
-    [/siapa (kamu|ami)|kamu siapa|perkenalan|nama(mu| kamu)/, () => 'Aku Ami, asisten kecil di portofolio Abdillah. Hobiku: terbang, beres-beres, dan ngobrol!'],
-    [/siapa (abdillah|pemilik|dia)|tentang abdillah|\bbio\b|pemilik/, () => 'Abdillah Mukhair Ismail — mahasiswa S1 Teknik Informatika Universitas Dipa Makassar, full-stack web developer.'],
-    [/whatsapp|\bwa\b|email|hubungi|kontak/, () => { const r = goSection('contact'); return 'WhatsApp +62 821-9648-1822 atau email abdillahmukhairismail@gmail.com. ' + (document.getElementById('contact') ? 'Kita ke sana!' : r); }],
-    [/(skill|keahlian|kemampuan)/, () => goSection('skills')],
-    [/(aktivitas|github|kontribusi)/, () => goSection('github')],
-    [/(tentang|about)/, () => goSection('about')],
-    [/(proyek|karya|project|portofolio)/, () => (isList ? 'Kamu sudah di halaman semua proyek!' : document.getElementById('projects') ? goSection('projects') : (setTimeout(() => { location.href = 'projects.html'; }, 900), 'Menuju daftar proyek…'))],
-    [/(atas|awal|beranda|home|top)\b/, () => { scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return 'Kembali ke atas!'; }],
-    [/(footer|paling bawah|dasar halaman)/, () => { scrollTo({ top: document.documentElement.scrollHeight, behavior: reduce ? 'auto' : 'smooth' }); return 'Meluncur ke bawah!'; }],
-    [/naik.*(tombol|button)/, () => perchNearest('.btn, .link-view-all, .filter-btn', 'tombol')],
-    [/naik.*(kartu|card|proyek|kotak)/, () => perchNearest('.project-card, .featured-item, .skill-item, .contact-link', 'kartu')],
-    [/naik.*(foto|gambar)/, () => perchNearest('.hero-photo, .d-visual, .card-desktop-thumb, .fi-desktop', 'foto')],
-    [/naik.*(judul|tulisan|heading)/, () => perchNearest('.section-title, .page-h1, .hero-h1, .d-title', 'judul')],
-    [/\bnaik|hinggap|bertengger/, () => perchNearest(PERCH_SEL, 'sesuatu')],
-    [/turun|lantai|jangan di atas/, async () => { unperch(); await move(clamp(A.x, 8, Math.max(10, rightLimit())), ground()); return 'Sudah turun!'; }],
-    [/lompat|loncat|jump/, async () => { await act(() => hop(3)); return 'Hup hup hup!'; }],
+    [/terima ?kasih|makasih|thanks|thx|tengkyu/, () => 'Sama-sama!', 'heart'],
+    [/siapa (kamu|ami)|kamu siapa|perkenalan|nama(mu| kamu)/, () => 'Aku Ami, asisten kecil di portofolio Abdillah. Hobiku: terbang, beres-beres, dan ngobrol!', 'smile'],
+    [/siapa (abdillah|pemilik|dia)|tentang abdillah|\bbio\b|pemilik/, () => 'Abdillah Mukhair Ismail, mahasiswa S1 Teknik Informatika Universitas Dipa Makassar, full-stack web developer.', 'star'],
+    [/whatsapp|\bwa\b|email|hubungi|kontak/, () => { const r = goSection('contact'); return 'WhatsApp +62 821-9648-1822 atau email abdillahmukhairismail@gmail.com. ' + (document.getElementById('contact') ? 'Kita ke sana!' : r); }, 'mail'],
+    [/(skill|keahlian|kemampuan)/, () => goSection('skills'), 'compass'],
+    [/(aktivitas|github|kontribusi)/, () => goSection('github'), 'compass'],
+    [/(tentang|about)/, () => goSection('about'), 'compass'],
+    [/(proyek|karya|project|portofolio)/, () => (isList ? 'Kamu sudah di halaman semua proyek!' : document.getElementById('projects') ? goSection('projects') : (setTimeout(() => { location.href = 'projects.html'; }, 900), 'Menuju daftar proyek…')), 'compass'],
+    [/(atas|awal|beranda|home|top)\b/, () => { scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }); return 'Kembali ke atas!'; }, 'up'],
+    [/(footer|paling bawah|dasar halaman)/, () => { scrollTo({ top: document.documentElement.scrollHeight, behavior: reduce ? 'auto' : 'smooth' }); return 'Meluncur ke bawah!'; }, 'down'],
+    [/lempar|lontar|tendang|katapel/, () => act(async () => { await new Promise(res => throwAmi({ vx: rnd(-2.4, 2.4), vy: rnd(-3, -1.8) }, res)); }).then(() => 'Wheee, lagi dong!'), 'rocket'],
+    [/naik.*(tombol|button)/, () => perchNearest('.btn, .link-view-all, .filter-btn', 'tombol'), 'up'],
+    [/naik.*(kartu|card|proyek|kotak)/, () => perchNearest('.project-card, .featured-item, .skill-item, .contact-link', 'kartu'), 'up'],
+    [/naik.*(foto|gambar)/, () => perchNearest('.hero-photo, .d-visual, .card-desktop-thumb, .fi-desktop', 'foto'), 'up'],
+    [/naik.*(judul|tulisan|heading)/, () => perchNearest('.section-title, .page-h1, .hero-h1, .d-title', 'judul'), 'up'],
+    [/\bnaik|hinggap|bertengger/, () => perchNearest(PERCH_SEL, 'sesuatu'), 'up'],
+    [/turun|lantai|jangan di atas/, async () => { unperch(); await back(); return 'Sudah turun!'; }, 'down'],
+    [/lompat|loncat|jump/, async () => { await act(() => hop(3)); return 'Hup hup hup!'; }, 'jump'],
     [/menari|joget|dance|goyang/, () => act(async () => {
       ami.classList.add('dance'); for (let i = 0; i < NOTES.length; i++) { sfx('letter', i % 8); await wait(210); }
-      await wait(600); ami.classList.remove('dance'); return null; }).then(() => 'Fiuh, capek tapi seru! 💃')],
-    [/putar|muter|spin|salto|jungkir/, () => act(async () => { ami.classList.add('spin'); sfx('whoosh'); await wait(1000); ami.classList.remove('spin'); }).then(() => 'Wheee!')],
+      await wait(600); ami.classList.remove('dance'); }).then(() => 'Fiuh, capek tapi seru!'), 'music'],
+    [/putar|muter|spin|salto|jungkir/, () => act(async () => { ami.classList.add('spin'); sfx('whoosh'); await wait(1000); ami.classList.remove('spin'); }).then(() => 'Wheee!'), 'spin'],
     [/terbang|melayang|keliling/, () => act(async () => {
       for (const [fx, fy] of [[.15, .25], [.8, .2], [.85, .6], [.2, .55]]) await move(W() * fx - sz.w / 2, H() * fy, { fly: true });
-      await move(clamp(A.x, 8, Math.max(10, rightLimit())), ground());
-    }).then(() => 'Pemandangan dari atas keren!')],
+      await back();
+    }).then(() => 'Pemandangan dari atas keren!'), 'rocket'],
     [/ikut|follow|kejar/, () => act(async () => {
-      say('Aku ikuti kursormu!', 1500);
+      say('Aku ikuti kursormu!', 1500, 'right');
       const end = Date.now() + 9000;
       while (Date.now() < end && !A.held) { await move(clamp(mx - sz.w / 2, 2, W() - sz.w - 2), clamp(my - sz.h - 14, 4, H() - sz.h), { fly: true }); await wait(120); }
-      await move(clamp(A.x, 8, Math.max(10, rightLimit())), ground());
-    }).then(() => 'Capek ngejar, hehe.')],
+      await back();
+    }).then(() => 'Capek ngejar, hehe.'), 'right'],
     [/sembunyi|ngumpet|hilang/, () => act(async () => {
       ami.style.transition = 'opacity .3s'; ami.style.opacity = '0'; await wait(3500);
       ami.style.opacity = ''; sfx('pop'); ami.classList.add('happy'); setTimeout(() => ami.classList.remove('happy'), 600); await wait(300); ami.style.transition = '';
-    }).then(() => 'Cilukba! 👀')],
-    [/tidur|ngantuk|istirahat/, () => { sleepLock = Date.now() + 6000; A.since = 99; ami.classList.add('sleeping'); return 'Zzz… (aku bangun kalau kamu colek)'; }],
-    [/bangun|wake/, () => { sleepLock = 0; wake(); ami.classList.remove('sleeping'); return 'Aku bangun!'; }],
-    [/berantak|acak|rusak|jatuhin|nakal/, () => { mischief(); return 'Hihi, ups… nggak sengaja 🙈'; }],
-    [/beres|rapi|bersih|perbaiki|kembalikan/, () => { if (!queue.length) return 'Sudah rapi kok! ✨ Coba jatuhkan sesuatu dulu.'; queue.forEach(m => { m.ready = 0; }); work(); return 'Siap, langsung kubereskan!'; }],
-    [/(matikan|mati|stop|diam|off|berhenti).*(musik|lagu|bgm|backsound)|(musik|lagu|bgm|backsound).*(mati|stop|off|diam)/, () => { window.Music && window.Music.setOn(false); return 'Musiknya kumatikan 🔇'; }],
-    [/musik|lagu|bgm|backsound|putar/, () => { if (window.Music) { window.Music.setOn(true); window.Music.start && window.Music.start(); } return 'Musik santai dinyalakan 🎵'; }],
-    [/lelucon|jokes?|lucu|bercanda|ketawa/, () => pick(JOKES)],
-    [/nyanyi|sing|bernyanyi/, () => act(async () => { for (let i = 0; i < 8; i++) { say('♪'.repeat(1 + (i % 3)), 400); sfx('letter', [0, 2, 4, 5, 4, 2, 3, 1][i]); await wait(260); } }).then(() => 'La la la~ 🎤')],
-    [/\b(halo|hai|hi|hello|hey|hei|pagi|siang|sore|malam)\b/, () => { ami.classList.add('waving'); setTimeout(() => ami.classList.remove('waving'), 1700); return 'Halo juga! Senang ketemu kamu 👋'; }],
-    [/apa kabar|gimana kabar/, () => 'Baik banget! Baling-balingku lagi segar 🚁'],
-    [/bisa apa|bantu|help|bantuan|perintah/, () => 'Aku bisa: lompat, menari, terbang, ikuti kursor, naik ke tombol/kartu/foto, ke skill/kontak/proyek, berantakin & beresin, musik, lelucon, nyanyi!'],
+    }).then(() => 'Cilukba!'), 'eye'],
+    [/tidur|ngantuk|istirahat/, () => { sleepLock = Date.now() + 6000; A.since = 99; ami.classList.add('sleeping'); return 'Zzz… (aku bangun kalau kamu colek)'; }, 'moon'],
+    [/bangun|wake/, () => { sleepLock = 0; wake(); ami.classList.remove('sleeping'); return 'Aku bangun!'; }, 'eye'],
+    [/berantak|acak|rusak|jatuhin|nakal/, () => { mischief(); return 'Hihi, ups… nggak sengaja.'; }, 'zap'],
+    [/beres|rapi|bersih|perbaiki|kembalikan/, () => { if (!queue.length) return 'Sudah rapi kok! Coba jatuhkan sesuatu dulu.'; queue.forEach(m => { m.ready = 0; }); work(); return 'Siap, langsung kubereskan!'; }, 'spark'],
+    [/(matikan|mati|stop|diam|off|berhenti).*(musik|lagu|bgm|backsound)|(musik|lagu|bgm|backsound).*(mati|stop|off|diam)/, () => { window.Music && window.Music.setOn(false); return 'Musiknya kumatikan.'; }, 'mute'],
+    [/musik|lagu|bgm|backsound|putar/, () => { if (window.Music) { window.Music.setOn(true); window.Music.start && window.Music.start(); } return 'Musik santai dinyalakan.'; }, 'music'],
+    [/lelucon|jokes?|lucu|bercanda|ketawa/, () => pick(JOKES), 'smile'],
+    [/nyanyi|sing|bernyanyi/, () => act(async () => { for (let i = 0; i < 8; i++) { say('la ' + 'la '.repeat(i % 3), 400, 'music'); sfx('letter', [0, 2, 4, 5, 4, 2, 3, 1][i]); await wait(260); } }).then(() => 'La la la~'), 'mic'],
+    [/\b(halo|hai|hi|hello|hey|hei|pagi|siang|sore|malam)\b/, () => { ami.classList.add('waving'); setTimeout(() => ami.classList.remove('waving'), 1700); return 'Halo juga! Senang ketemu kamu.'; }, 'hand'],
+    [/apa kabar|gimana kabar/, () => 'Baik banget! Baling-balingku lagi segar.', 'smile'],
+    [/bisa apa|bantu|help|bantuan|perintah/, () => 'Aku bisa: lompat, menari, terbang, ikuti kursor, lempar aku, naik ke tombol/kartu/foto, ke skill/kontak/proyek, berantakin & beresin, musik, lelucon, nyanyi!', 'help'],
   ];
   async function ask(text) {
     logLine('me', text);
     A.since = 0; wake();
     const q = text.toLowerCase();
-    let reply = null, hit = false;
-    for (const [re, fn] of RULES) {
-      if (re.test(q)) { hit = true; try { reply = await fn(); } catch (_) { reply = 'Ups, ada yang error.'; } break; }
+    let reply = null, icon = null, hit = false;
+    for (const [re, fn, i] of RULES) {
+      if (re.test(q)) { hit = true; icon = i; try { reply = await fn(); } catch (_) { reply = 'Ups, ada yang error.'; } break; }
     }
-    if (!hit) reply = pick(['Hmm, aku belum paham itu 😅 Coba: "lompat", "ke skill", "naik ke tombol", atau "musik".', 'Belum ngerti nih. Ketik "bantuan" buat lihat daftar perintahku!']);
-    if (reply) { logLine('ami', reply); say(reply, clamp(reply.length * 55, 2200, 6500)); sfx('bubble'); }
+    if (!hit) { icon = 'help'; reply = pick(['Hmm, aku belum paham itu. Coba: "lompat", "ke skill", "lempar aku", atau "musik".', 'Belum ngerti nih. Ketik "bantuan" buat lihat daftar perintahku!']); }
+    if (reply) { logLine('ami', reply, icon); say(reply, clamp(reply.length * 55, 2200, 6500), icon); sfx('bubble'); }
   }
   function mischief() {
-    const items = $$(DRAG_SEL).filter(e => {
+    const ok = e => {
       if (e.closest(NO_DRAG) || e.closest('.ami-ghost') || e.style.visibility === 'hidden') return false;
-      const r = e.getBoundingClientRect(); return r.width > 16 && r.height > 12 && r.top > 70 && r.bottom < H() - 20 && r.width < W() * .9;
-    }).sort(() => Math.random() - .5).slice(0, 4);
+      const r = e.getBoundingClientRect(); return r.width > 16 && r.height > 12 && r.top > 70 && r.bottom < H() - 20 && r.width < W() * .97;
+    };
+    const cards = $$(SCATTER_SEL).filter(ok).filter(e => e.matches('.featured-item, .project-card'));
+    const items = $$(DRAG_SEL).filter(e => !e.matches('.featured-item, .project-card') && !(cards[0] && cards[0].contains(e)) && ok(e)).sort(() => Math.random() - .5).slice(0, 3);
+    if (cards.length) {
+      const c = cards[(Math.random() * cards.length) | 0];
+      scatterCard(makeGhost(c), { vx: rnd(-.8, .8), vy: rnd(-1.4, -.6) }, true);
+    }
     items.forEach((el, i) => setTimeout(() => {
+      if (el.style.visibility === 'hidden') return;
       const g = makeGhost(el); sfx('grab');
       fall(g, rnd(-1.1, 1.1), rnd(-1.5, -.6));
-    }, i * 220));
-    if (!items.length) say('Nggak ada yang bisa kuberantakin di layar ini 😅', 2000);
+    }, 300 + i * 220));
+    if (!cards.length && !items.length) say('Nggak ada yang bisa kuberantakin di layar ini.', 2000, 'help');
   }
 
   /* ───────── Komentar sesuai bagian / halaman ───────── */
   const LINES = {
-    hero: 'Halo! Aku Ami 👋 Colek aku, atau tarik apa saja!',
-    about: 'Tahan & geser catatannya — nanti kurapikan lagi.',
-    github: 'Ketuk kotak-kotaknya buat ngecat. Aku yang nyapu!',
-    skills: 'Coba geser bar-nya… level aslinya kujaga ya 😤',
-    projects: 'Lencana teknologinya bisa dilempar. Awas jatuh!',
-    contact: 'Mau ngobrol? Isi formnya, Ami tunggu 📬',
+    hero: ['Halo! Aku Ami. Colek aku, tarik, atau lempar!', 'hand'],
+    about: ['Tahan & geser catatannya, nanti kurapikan lagi.', 'wrench'],
+    github: ['Ketuk kotak-kotaknya buat ngecat. Aku yang nyapu!', 'spark'],
+    skills: ['Coba geser bar-nya… level aslinya kujaga ya!', 'bolt'],
+    projects: ['Jatuhkan satu kartu, isinya bakal berhamburan lho.', 'zap'],
+    contact: ['Mau ngobrol? Isi formnya, Ami tunggu.', 'mail'],
   };
   const said = new Set();
   if ('IntersectionObserver' in window && !isList && !isDetail) {
@@ -823,7 +965,7 @@
       const id = en.target.id;
       if (!en.isIntersecting || said.has(id) || !LINES[id] || id === 'hero') return;
       said.add(id);
-      setTimeout(() => { if (!busy && !A.held && !drag) say(LINES[id], 3400); }, 700);
+      setTimeout(() => { if (!busy && !A.held && !drag) say(LINES[id][0], 3400, LINES[id][1]); }, 700);
     }), { rootMargin: '-40% 0px -50% 0px' });
     $$('section[id]').forEach(s => io.observe(s));
   }
@@ -832,7 +974,7 @@
       if (!e.target.closest || !e.target.closest('.filter-btn')) return;
       setTimeout(() => {
         const n = $$('.project-card').filter(c => !c.classList.contains('hidden')).length;
-        if (!busy) say(n ? `Ketemu ${n} proyek!` : 'Hmm, belum ada proyek di sini.', 2200);
+        if (!busy) say(n ? `Ketemu ${n} proyek!` : 'Hmm, belum ada proyek di sini.', 2200, 'star');
       }, 300);
     });
   }
@@ -842,17 +984,17 @@
     await wait(reduce ? 200 : 1500);
     await move(16, ground());
     ami.classList.add('waving'); setTimeout(() => ami.classList.remove('waving'), 1700);
-    say(isList ? 'Ini semua karyaku! Lempar lencananya kalau berani 😎'
-      : isDetail ? 'Tag & labelnya bisa digeser lho. Coba!' : LINES.hero, 3800);
+    say(isList ? 'Ini semua karyaku! Jatuhkan satu kartunya kalau berani.'
+      : isDetail ? 'Tag & labelnya bisa digeser lho. Coba!' : LINES.hero[0], 3800, isList ? 'star' : isDetail ? 'wrench' : 'hand');
     setTimeout(() => {
       try { if (sessionStorage.getItem('ami-hint')) return; sessionStorage.setItem('ami-hint', '1'); } catch (_) {}
       const h = document.createElement('div');
       h.className = 'physics-hint';
-      h.textContent = matchMedia('(hover:hover)').matches ? 'Seret item apa saja lalu lepas — Ami yang membereskan' : 'Tahan item lalu geser & lepas — Ami yang membereskan';
+      h.textContent = matchMedia('(hover:hover)').matches ? 'Seret item atau kartu lalu lepas, Ami yang membereskan. Ami juga bisa dilempar!' : 'Tahan item atau kartu lalu geser & lepas. Ami juga bisa dilempar!';
       document.body.appendChild(h);
       setTimeout(() => { h.style.opacity = '0'; setTimeout(() => h.remove(), 500); }, 4600);
     }, 4200);
   })();
 
-  window.Ami = { say, poke, ask };
+  window.Ami = { say, poke, ask, throwAmi };
 })();
